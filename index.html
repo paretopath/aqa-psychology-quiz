@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AQA Psychology A-Level Quiz</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#fff;--card:#fff;--text:#111;--muted:#666;--border:#e0e0e0;--accent:#2563eb;--accent-hover:#1d4ed8;--success:#16a34a;--error:#dc2626;--warning:#f59e0b;--ao1:#3b82f6;--ao2:#8b5cf6;--ao3:#ec4899;--radius:8px}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5}
+.container{max-width:720px;margin:0 auto;padding:16px}
+h1{font-size:1.5rem;font-weight:700;letter-spacing:-0.02em}
+h2{font-size:1.2rem;font-weight:600}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px}
+button{cursor:pointer;border:none;border-radius:var(--radius);font-size:0.95rem;font-weight:500;padding:10px 20px;transition:all 0.15s}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-hover)}
+.btn-secondary{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
+.btn-secondary:hover{background:var(--accent);color:#fff}
+.btn-sm{padding:6px 14px;font-size:0.85rem}
+.btn-danger{background:var(--error);color:#fff}
+.btn-danger:hover{background:#b91c1c}
+
+/* Header */
+header{display:flex;justify-content:space-between;align-items:center;padding:12px 0;margin-bottom:8px}
+header .score-display{font-size:0.9rem;color:var(--muted)}
+header .score-display strong{color:var(--text)}
+
+/* Screens */
+.screen{display:none}
+.screen.active{display:block}
+
+/* Home */
+#home .title-section{text-align:center;padding:40px 0 24px}
+#home .title-section h1{font-size:2rem;margin-bottom:4px}
+#home .title-section p{color:var(--muted);font-size:0.95rem}
+.mode-grid{display:grid;gap:12px;margin:16px 0}
+.mode-btn{text-align:left;padding:20px;background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);transition:all 0.15s}
+.mode-btn:hover{border-color:var(--accent);box-shadow:0 2px 8px rgba(37,99,235,0.1)}
+.mode-btn .mode-title{font-weight:600;font-size:1rem}
+.mode-btn .mode-desc{color:var(--muted);font-size:0.85rem;margin-top:2px}
+.mode-btn .mode-badge{display:inline-block;font-size:0.75rem;font-weight:600;padding:2px 8px;border-radius:12px;margin-top:6px}
+.mode-btn[data-mode="10"] .mode-badge{background:#dcfce7;color:#166534}
+.mode-btn[data-mode="50"] .mode-badge{background:#fef3c7;color:#92400e}
+.mode-btn[data-mode="100"] .mode-badge{background:#fce7f3;color:#9d174d}
+.nav-links{display:flex;gap:8px;justify-content:center;margin-top:20px}
+
+/* Topic Selection */
+#topic-select .topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0}
+.topic-btn{text-align:left;padding:14px;background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius)}
+.topic-btn:hover{border-color:var(--accent)}
+.topic-btn.selected{border-color:var(--accent);background:#eff6ff}
+.topic-btn .topic-name{font-weight:600;font-size:0.9rem}
+.topic-btn .topic-count{color:var(--muted);font-size:0.8rem}
+
+/* Progress bar */
+.progress-bar{height:4px;background:var(--border);border-radius:2px;margin-bottom:16px;overflow:hidden}
+.progress-fill{height:100%;background:var(--accent);transition:width 0.3s;border-radius:2px}
+
+/* Question */
+.question-meta{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+.badge{font-size:0.75rem;font-weight:600;padding:2px 8px;border-radius:12px}
+.badge-topic{background:#f0f0f0;color:#333}
+.badge-marks{background:#eff6ff;color:var(--accent)}
+.badge-ao1{background:#dbeafe;color:var(--ao1)}
+.badge-ao2{background:#ede9fe;color:var(--ao2)}
+.badge-ao3{background:#fce7f3;color:var(--ao3)}
+.question-text{font-size:1.05rem;font-weight:500;margin-bottom:16px;line-height:1.6}
+.question-context{font-size:0.9rem;color:var(--muted);margin-bottom:12px;padding:12px;background:#f8f8f8;border-radius:var(--radius);line-height:1.5;font-style:italic}
+
+/* MCQ Options */
+.options-list{display:grid;gap:8px}
+.option-btn{text-align:left;padding:14px 16px;background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);font-size:0.95rem;line-height:1.4;transition:all 0.15s}
+.option-btn:hover:not(.locked){border-color:var(--accent);background:#f8faff}
+.option-btn.selected{border-color:var(--accent);background:#eff6ff}
+.option-btn.correct{border-color:var(--success);background:#f0fdf4}
+.option-btn.incorrect{border-color:var(--error);background:#fef2f2}
+.option-btn.locked{cursor:default}
+.option-letter{font-weight:700;color:var(--muted);margin-right:8px}
+
+/* Multi-select MCQ */
+.multi-hint{font-size:0.85rem;color:var(--muted);margin-bottom:8px}
+.option-btn.multi-selected{border-color:var(--accent);background:#eff6ff}
+
+/* Puzzle (16-marker) */
+.puzzle-intro{font-size:0.9rem;color:var(--muted);margin-bottom:12px}
+.puzzle-zone{min-height:60px;border:2px dashed var(--border);border-radius:var(--radius);padding:8px;margin-bottom:12px;transition:all 0.15s}
+.puzzle-zone.drag-over{border-color:var(--accent);background:#f8faff}
+.puzzle-zone-label{font-size:0.8rem;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.puzzle-zone-label .dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.dot-ao1{background:var(--ao1)}
+.dot-ao2{background:var(--ao2)}
+.dot-ao3{background:var(--ao3)}
+.puzzle-pieces-bank{border:1px solid var(--border);border-radius:var(--radius);padding:8px;margin-bottom:12px;background:#f8f8f8}
+.puzzle-pieces-bank-label{font-size:0.8rem;font-weight:600;color:var(--muted);margin-bottom:6px}
+.puzzle-piece{padding:10px 14px;margin:4px;border-radius:6px;font-size:0.85rem;cursor:grab;user-select:none;display:inline-block;line-height:1.4;transition:all 0.15s;border:1.5px solid transparent;max-width:100%;word-wrap:break-word}
+.puzzle-piece:active{cursor:grabbing;opacity:0.8}
+.puzzle-piece.ao1{background:#dbeafe;border-color:#93c5fd}
+.puzzle-piece.ao2{background:#ede9fe;border-color:#c4b5fd}
+.puzzle-piece.ao3{background:#fce7f3;border-color:#f9a8d4}
+.puzzle-piece.correct-pos{opacity:0.7;box-shadow:inset 0 0 0 2px var(--success)}
+.puzzle-piece.incorrect-pos{box-shadow:inset 0 0 0 2px var(--error)}
+.puzzle-piece.in-zone{margin:4px 0;display:block}
+
+/* Feedback */
+.feedback{padding:14px;border-radius:var(--radius);margin-top:12px;font-size:0.9rem;line-height:1.5}
+.feedback.correct{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534}
+.feedback.incorrect{background:#fef2f2;border:1px solid #fecaca;color:#991b1b}
+.feedback.partial{background:#fffbeb;border:1px solid #fde68a;color:#92400e}
+.feedback-answer{margin-top:6px;font-weight:500}
+
+/* Action bar */
+.action-bar{display:flex;justify-content:space-between;align-items:center;margin-top:16px}
+.timer{font-size:0.85rem;color:var(--muted)}
+
+/* Results */
+#results .results-header{text-align:center;padding:24px 0}
+.results-score{font-size:3rem;font-weight:700;color:var(--accent)}
+.results-label{color:var(--muted);font-size:0.9rem}
+.results-grade{font-size:1.2rem;font-weight:600;margin-top:4px}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:16px 0}
+.stat-card{text-align:center;padding:16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius)}
+.stat-value{font-size:1.5rem;font-weight:700}
+.stat-label{font-size:0.8rem;color:var(--muted)}
+.results-actions{display:flex;gap:8px;justify-content:center;margin-top:16px}
+
+/* Leaderboard */
+#leaderboard .lb-table{width:100%;border-collapse:collapse;margin-top:12px}
+.lb-table th,.lb-table td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border);font-size:0.9rem}
+.lb-table th{font-weight:600;color:var(--muted);font-size:0.8rem;text-transform:uppercase;letter-spacing:0.04em}
+.lb-table tr:hover td{background:#f8f8f8}
+.lb-rank{font-weight:700;color:var(--accent)}
+.lb-mode{font-size:0.75rem;padding:2px 6px;border-radius:8px}
+.lb-empty{text-align:center;padding:40px;color:var(--muted)}
+.lb-tabs{display:flex;gap:4px;margin-top:12px}
+.lb-tab{padding:6px 14px;font-size:0.85rem;border-radius:20px;background:transparent;color:var(--muted);border:1px solid var(--border)}
+.lb-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* Name input modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;z-index:100;display:none}
+.modal-overlay.active{display:flex}
+.modal{background:var(--card);border-radius:var(--radius);padding:24px;width:90%;max-width:360px}
+.modal h2{margin-bottom:12px}
+.modal input{width:100%;padding:10px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:1rem;margin-bottom:12px}
+.modal input:focus{outline:none;border-color:var(--accent)}
+
+/* Responsive */
+@media(max-width:600px){
+  .container{padding:12px}
+  #topic-select .topic-grid{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .puzzle-piece{font-size:0.8rem;padding:8px 10px}
+}
+
+/* Animations */
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn 0.2s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.shake{animation:shake 0.3s ease}
+
+/* Streak indicator */
+.streak{display:inline-flex;align-items:center;gap:4px;font-size:0.85rem;color:var(--warning);font-weight:600}
+.streak-fire{font-size:1rem}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- HOME SCREEN -->
+<div id="home" class="screen active">
+  <div class="title-section">
+    <h1>AQA Psychology</h1>
+    <p>A-Level Revision Quiz</p>
+  </div>
+  <div class="mode-grid">
+    <button class="mode-btn" data-mode="10" onclick="selectMode(10)">
+      <div class="mode-title">Quick Quiz</div>
+      <div class="mode-desc">10 questions</div>
+      <span class="mode-badge">Easy</span>
+    </button>
+    <button class="mode-btn" data-mode="50" onclick="selectMode(50)">
+      <div class="mode-title">Standard</div>
+      <div class="mode-desc">50 questions</div>
+      <span class="mode-badge">Medium</span>
+    </button>
+    <button class="mode-btn" data-mode="100" onclick="selectMode(100)">
+      <div class="mode-title">Hero Mode</div>
+      <div class="mode-desc">100 questions</div>
+      <span class="mode-badge">Hero</span>
+    </button>
+  </div>
+  <div class="nav-links">
+    <button class="btn-secondary btn-sm" onclick="showScreen('leaderboard')">Leaderboard</button>
+  </div>
+  <div style="text-align:center;margin-top:8px">
+    <a href="" target="_blank" id="fullscreenLink" style="font-size:0.8rem;color:var(--muted);text-decoration:none">Open in new tab &#8599;</a>
+  </div>
+</div>
+
+<!-- TOPIC SELECTION -->
+<div id="topic-select" class="screen">
+  <h2>Select Topics</h2>
+  <p style="color:var(--muted);font-size:0.9rem;margin-top:4px">Choose which topics to include, or leave all selected for a full mix.</p>
+  <div class="topic-grid" id="topicGrid"></div>
+  <div style="display:flex;gap:8px;margin-top:8px">
+    <button class="btn-secondary btn-sm" onclick="toggleAllTopics()">Toggle All</button>
+  </div>
+  <div style="margin-top:16px;display:flex;gap:8px">
+    <button class="btn-primary" onclick="startGame()">Start Quiz</button>
+    <button class="btn-secondary" onclick="showScreen('home')">Back</button>
+  </div>
+</div>
+
+<!-- QUIZ SCREEN -->
+<div id="quiz" class="screen">
+  <header>
+    <div>
+      <span id="qNumber" style="font-weight:600"></span>
+      <span id="streakDisplay" class="streak" style="margin-left:8px"></span>
+    </div>
+    <div class="score-display">Score: <strong id="scoreDisplay">0</strong></div>
+  </header>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div id="questionCard" class="card fade-in"></div>
+  <div id="feedbackBox"></div>
+  <div class="action-bar">
+    <div class="timer" id="timerDisplay"></div>
+    <div id="actionButtons"></div>
+  </div>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div id="results" class="screen">
+  <div class="results-header">
+    <div class="results-score" id="finalScore"></div>
+    <div class="results-label" id="finalLabel"></div>
+    <div class="results-grade" id="finalGrade"></div>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-value" id="statCorrect">0</div><div class="stat-label">Correct</div></div>
+    <div class="stat-card"><div class="stat-value" id="statStreak">0</div><div class="stat-label">Best Streak</div></div>
+    <div class="stat-card"><div class="stat-value" id="statTime">0:00</div><div class="stat-label">Time</div></div>
+  </div>
+  <div class="results-actions">
+    <button class="btn-primary" onclick="showScreen('home')">Play Again</button>
+    <button class="btn-secondary" onclick="showScreen('leaderboard')">Leaderboard</button>
+  </div>
+</div>
+
+<!-- LEADERBOARD SCREEN -->
+<div id="leaderboard" class="screen">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <h2>Leaderboard</h2>
+    <button class="btn-secondary btn-sm" onclick="showScreen('home')">Back</button>
+  </div>
+  <div class="lb-tabs">
+    <button class="lb-tab active" onclick="filterLeaderboard('all',this)">All</button>
+    <button class="lb-tab" onclick="filterLeaderboard(10,this)">Easy</button>
+    <button class="lb-tab" onclick="filterLeaderboard(50,this)">Medium</button>
+    <button class="lb-tab" onclick="filterLeaderboard(100,this)">Hero</button>
+  </div>
+  <div id="leaderboardContent"></div>
+  <div style="margin-top:12px;text-align:center">
+    <button class="btn-danger btn-sm" onclick="clearLeaderboard()">Clear Leaderboard</button>
+  </div>
+</div>
+
+<!-- NAME MODAL -->
+<div class="modal-overlay" id="nameModal">
+  <div class="modal">
+    <h2>Enter Your Name</h2>
+    <input type="text" id="playerNameInput" placeholder="Your name" maxlength="20" autofocus>
+    <button class="btn-primary" onclick="submitName()" style="width:100%">Save Score</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+// ============================================
+// QUESTION BANK
+// ============================================
+const QUESTIONS = [
+// ---- SOCIAL INFLUENCE ----
+{
+  id:"si1",topic:"Social Influence",type:"mcq",marks:1,
+  text:"In Asch's line experiment, what was the conformity rate on critical trials?",
+  options:["12.5%","36.8%","50%","75%"],
+  correct:1,
+  explanation:"Asch found a conformity rate of approximately 36.8% across critical trials."
+},
+{
+  id:"si2",topic:"Social Influence",type:"mcq",marks:1,
+  text:"In Milgram's original obedience study, what percentage of participants administered the maximum 450V shock?",
+  options:["35%","50%","65%","80%"],
+  correct:2,
+  explanation:"65% of participants went to the maximum 450 volts in Milgram's original study."
+},
+{
+  id:"si3",topic:"Social Influence",type:"mcq",marks:1,
+  text:"Which type of conformity involves publicly agreeing but privately disagreeing?",
+  options:["Internalisation","Identification","Compliance","Obedience"],
+  correct:2,
+  explanation:"Compliance involves publicly conforming but privately maintaining your own views."
+},
+{
+  id:"si4",topic:"Social Influence",type:"mcq",marks:1,
+  text:"What is the term for consistency of a minority's message over time?",
+  options:["Synchronic consistency","Diachronic consistency","Flexibility","Commitment"],
+  correct:1,
+  explanation:"Diachronic consistency refers to maintaining the same message over time. Synchronic consistency is agreement between minority group members."
+},
+{
+  id:"si5",topic:"Social Influence",type:"mcq",marks:1,
+  text:"In Moscovici's blue slide study, what percentage of majority participants called a blue slide green when the minority was consistent?",
+  options:["2%","8%","15%","32%"],
+  correct:1,
+  explanation:"8.42% of responses identified a blue slide as green when exposed to a consistent minority."
+},
+{
+  id:"si6",topic:"Social Influence",type:"mcq",marks:1,
+  text:"Which explanation of obedience proposes that people act as agents carrying out another person's wishes?",
+  options:["Authoritarian personality","Legitimacy of authority","Agentic state","Social identity theory"],
+  correct:2,
+  explanation:"The agentic state theory proposes people shift from an autonomous state to acting as agents of an authority figure."
+},
+{
+  id:"si7",topic:"Social Influence",type:"mcq",marks:1,
+  text:"What personality type, according to Adorno, is associated with higher levels of obedience?",
+  options:["Type A personality","Authoritarian personality","Extraverted personality","Neurotic personality"],
+  correct:1,
+  explanation:"Adorno proposed the authoritarian personality, measured by the F-scale, is linked to obedience to authority."
+},
+{
+  id:"si8",topic:"Social Influence",type:"mcq",marks:1,
+  text:"Which of these is NOT a factor that Milgram identified as increasing obedience?",
+  options:["Proximity of authority","Prestigious location","Presence of allies","Wearing a uniform"],
+  correct:2,
+  explanation:"The presence of allies (social support) actually decreased obedience. When a confederate refused, obedience dropped to 10%."
+},
+{
+  id:"si9",topic:"Social Influence",type:"mcq",marks:1,
+  text:"Informational social influence is most likely to lead to which type of conformity?",
+  options:["Compliance","Identification","Internalisation","Obedience"],
+  correct:2,
+  explanation:"Informational social influence occurs when we look to others for information about how to behave, leading to genuine change in beliefs (internalisation)."
+},
+{
+  id:"si10",topic:"Social Influence",type:"mcq",marks:1,
+  text:"What did Zimbardo's Stanford Prison Experiment demonstrate about conformity to social roles?",
+  options:["People resist assigned roles","People quickly conform to assigned roles","Only prisoners conform to roles","Guards refuse to be cruel"],
+  correct:1,
+  explanation:"Zimbardo found both guards and prisoners quickly conformed to their assigned social roles, with guards becoming increasingly authoritarian."
+},
+{
+  id:"si11",topic:"Social Influence",type:"mcq",marks:1,
+  text:"Normative social influence is based on the desire to:",
+  options:["Be correct","Gain information","Fit in and be accepted","Obey authority"],
+  correct:2,
+  explanation:"Normative social influence is driven by the desire to be liked and accepted by the group, avoiding rejection."
+},
+{
+  id:"si12",topic:"Social Influence",type:"mcq",marks:1,
+  text:"In which variation of Milgram's study did obedience drop to 20.5%?",
+  options:["Run-down office block","Teacher and learner in same room","Teacher forced learner's hand onto plate","Experimenter gave instructions by phone"],
+  correct:3,
+  explanation:"When the experimenter gave instructions by phone rather than being in the room, obedience dropped to 20.5%."
+},
+// ---- MEMORY ----
+{
+  id:"me1",topic:"Memory",type:"mcq",marks:1,
+  text:"What is the capacity of short-term memory according to Miller?",
+  options:["5 plus or minus 2","7 plus or minus 2","9 plus or minus 2","Unlimited"],
+  correct:1,
+  explanation:"Miller proposed the 'magic number 7 plus or minus 2' for STM capacity."
+},
+{
+  id:"me2",topic:"Memory",type:"mcq",marks:1,
+  text:"Which component of the working memory model acts as the 'boss' directing attention?",
+  options:["Phonological loop","Visuo-spatial sketchpad","Central executive","Episodic buffer"],
+  correct:2,
+  explanation:"The central executive is the key component that directs attention and allocates resources to the slave systems."
+},
+{
+  id:"me3",topic:"Memory",type:"mcq",marks:1,
+  text:"Episodic memories differ from semantic memories because they are:",
+  options:["Memories of facts and general knowledge","Time-stamped autobiographical events","Procedural skills","Always accurate"],
+  correct:1,
+  explanation:"Episodic memories are personal, time-stamped autobiographical events, while semantic memories are factual knowledge."
+},
+{
+  id:"me4",topic:"Memory",type:"mcq",marks:1,
+  text:"The encoding specificity principle is associated with which explanation of forgetting?",
+  options:["Proactive interference","Retroactive interference","Retrieval failure","Decay theory"],
+  correct:2,
+  explanation:"Tulving's encoding specificity principle underpins retrieval failure, where a lack of matching cues prevents access to stored memories."
+},
+{
+  id:"me5",topic:"Memory",type:"mcq",marks:1,
+  text:"Loftus and Palmer's study of car accident estimates demonstrates:",
+  options:["Proactive interference","The misinformation effect from leading questions","Retrieval failure","Multi-store model validity"],
+  correct:1,
+  explanation:"Loftus and Palmer showed that the verb used in a leading question (e.g. 'smashed' vs 'contacted') affected speed estimates and false memories."
+},
+{
+  id:"me6",topic:"Memory",type:"mcq",marks:1,
+  text:"In Godden and Baddeley's study, divers recalled words best when:",
+  options:["Always on land","Always underwater","Learning and recall environments matched","They used rehearsal strategies"],
+  correct:2,
+  explanation:"Divers recalled best when learning and recall contexts matched (both on land or both underwater), supporting context-dependent retrieval."
+},
+{
+  id:"me7",topic:"Memory",type:"mcq",marks:1,
+  text:"Which two components make up the phonological loop?",
+  options:["Inner eye and inner voice","Phonological store and articulatory process","Central executive and episodic buffer","Visual cache and inner scribe"],
+  correct:1,
+  explanation:"The phonological loop consists of the phonological store ('inner ear') and the articulatory process ('inner voice')."
+},
+{
+  id:"me8",topic:"Memory",type:"mcq",marks:1,
+  text:"The cognitive interview technique was developed by:",
+  options:["Loftus and Palmer","Fisher and Geiselman","Baddeley and Hitch","Bartlett"],
+  correct:1,
+  explanation:"Fisher and Geiselman developed the cognitive interview to improve eyewitness recall."
+},
+{
+  id:"me9",topic:"Memory",type:"mcq",marks:1,
+  text:"Proactive interference occurs when:",
+  options:["New learning disrupts old memories","Old learning disrupts new memories","Cues are absent at retrieval","Memories decay over time"],
+  correct:1,
+  explanation:"Proactive interference is when previously learned material interferes with the ability to recall newer information."
+},
+{
+  id:"me10",topic:"Memory",type:"mcq",marks:1,
+  text:"Which of the following is NOT a component of the cognitive interview?",
+  options:["Report everything","Reinstate the context","Recall in reverse order","Use leading questions"],
+  correct:3,
+  explanation:"The cognitive interview specifically avoids leading questions. Its techniques include report everything, reinstate context, recall in reverse order, and change perspective."
+},
+{
+  id:"me11",topic:"Memory",type:"mcq",marks:1,
+  text:"The multi-store model was proposed by:",
+  options:["Baddeley and Hitch","Atkinson and Shiffrin","Tulving","Bartlett"],
+  correct:1,
+  explanation:"Atkinson and Shiffrin (1968) proposed the multi-store model with sensory register, STM, and LTM."
+},
+{
+  id:"me12",topic:"Memory",type:"mcq",marks:1,
+  text:"Post-event discussion can reduce eyewitness accuracy through:",
+  options:["Proactive interference only","Memory conformity and source monitoring errors","Retrograde amnesia","Sensory overload"],
+  correct:1,
+  explanation:"Post-event discussion can contaminate memory through conformity (copying others' accounts) and source monitoring errors (confusing where information came from)."
+},
+// ---- ATTACHMENT ----
+{
+  id:"at1",topic:"Attachment",type:"mcq",marks:1,
+  text:"Which feature of caregiver-infant interaction involves the baby and caregiver taking turns to respond?",
+  options:["Interactional synchrony","Reciprocity","Attachment","Bonding"],
+  correct:1,
+  explanation:"Reciprocity is the turn-taking interaction between infant and caregiver, like a conversation."
+},
+{
+  id:"at2",topic:"Attachment",type:"mcq",marks:1,
+  text:"When a caregiver and infant move in coordination with each other, this is called:",
+  options:["Reciprocity","Interactional synchrony","Imprinting","Monotropy"],
+  correct:1,
+  explanation:"Interactional synchrony is when caregiver and infant mirror each other's actions and emotions simultaneously."
+},
+{
+  id:"at3",topic:"Attachment",type:"mcq",marks:1,
+  text:"According to Bowlby, the critical period for attachment formation is approximately:",
+  options:["The first 6 months","The first 2.5 years","The first 5 years","The first 7 years"],
+  correct:1,
+  explanation:"Bowlby proposed a critical period of roughly the first 2.5-3 years for forming a primary attachment."
+},
+{
+  id:"at4",topic:"Attachment",type:"mcq",marks:1,
+  text:"Bowlby's internal working model suggests that early attachment:",
+  options:["Has no effect on later relationships","Creates a template for future relationships","Only affects peer relationships","Is determined by genetics"],
+  correct:1,
+  explanation:"The internal working model is a mental schema based on the first attachment that serves as a blueprint for future relationships."
+},
+{
+  id:"at5",topic:"Attachment",type:"mcq",marks:1,
+  text:"In Ainsworth's Strange Situation, Type B attachment is characterised as:",
+  options:["Insecure-avoidant","Secure","Insecure-resistant","Disorganised"],
+  correct:1,
+  explanation:"Type B is secure attachment: the child uses the caregiver as a safe base, shows distress on separation, and is easily comforted on reunion."
+},
+{
+  id:"at6",topic:"Attachment",type:"mcq",marks:1,
+  text:"In Romanian orphan studies, children adopted after 6 months often showed:",
+  options:["No effects of institutionalisation","Disinhibited attachment","Superior cognitive ability","Secure attachment"],
+  correct:1,
+  explanation:"Rutter's ERA study found children adopted after 6 months showed disinhibited attachment, quasi-autism, and developmental delays."
+},
+{
+  id:"at7",topic:"Attachment",type:"mcq",marks:1,
+  text:"What is Bowlby's concept of monotropy?",
+  options:["Children form many equal attachments","Children have one primary attachment figure","All attachments are insecure","Attachment is purely biological"],
+  correct:1,
+  explanation:"Monotropy is Bowlby's idea that children form one special, primary attachment that is qualitatively different from all others."
+},
+{
+  id:"at8",topic:"Attachment",type:"mcq",marks:1,
+  text:"Lorenz demonstrated imprinting using which animals?",
+  options:["Dogs","Rhesus monkeys","Greylag geese","Rats"],
+  correct:2,
+  explanation:"Lorenz used greylag geese to demonstrate imprinting, showing that goslings would follow the first moving object they saw."
+},
+{
+  id:"at9",topic:"Attachment",type:"mcq",marks:1,
+  text:"Harlow's research with rhesus monkeys showed that infant monkeys preferred:",
+  options:["The wire mother with food","The cloth mother for comfort","Isolation over either mother","Neither surrogate mother"],
+  correct:1,
+  explanation:"Harlow showed monkeys preferred the cloth-covered 'mother' for contact comfort over the wire mother that provided food."
+},
+{
+  id:"at10",topic:"Attachment",type:"mcq",marks:1,
+  text:"Which type of attachment in the Strange Situation shows high separation anxiety but resists comfort on reunion?",
+  options:["Type A: Insecure-avoidant","Type B: Secure","Type C: Insecure-resistant","Type D: Disorganised"],
+  correct:2,
+  explanation:"Type C (insecure-resistant) children show intense distress on separation but resist comfort and are ambivalent towards the caregiver on reunion."
+},
+// ---- PSYCHOPATHOLOGY ----
+{
+  id:"pp1",topic:"Psychopathology",type:"mcq",marks:1,
+  text:"Which two are emotional characteristics of OCD?",
+  options:["Hypervigilance and obsessive thoughts","Low mood and self-loathing","Compulsions and rituals","Avoidance and withdrawal"],
+  correct:1,
+  explanation:"The emotional characteristics of OCD include anxiety about obsessions leading to low mood and accompanying self-loathing."
+},
+{
+  id:"pp2",topic:"Psychopathology",type:"mcq",marks:1,
+  text:"In the two-process model of phobias, the phobia is acquired through:",
+  options:["Operant conditioning","Social learning","Classical conditioning","Cognitive schemas"],
+  correct:2,
+  explanation:"In Mowrer's two-process model, the phobia is first acquired through classical conditioning (learning by association)."
+},
+{
+  id:"pp3",topic:"Psychopathology",type:"mcq",marks:1,
+  text:"In the two-process model, phobias are maintained through:",
+  options:["Classical conditioning","Operant conditioning (negative reinforcement)","Positive reinforcement","Observational learning"],
+  correct:1,
+  explanation:"Phobias are maintained through operant conditioning: avoidance behaviour is negatively reinforced by the relief from anxiety."
+},
+{
+  id:"pp4",topic:"Psychopathology",type:"mcq",marks:1,
+  text:"Beck's cognitive triad of depression involves negative views about:",
+  options:["Past, present, and future","Self, world, and future","Family, work, and health","Thoughts, feelings, and behaviour"],
+  correct:1,
+  explanation:"Beck's negative triad consists of negative views about the self, the world, and the future."
+},
+{
+  id:"pp5",topic:"Psychopathology",type:"mcq",marks:1,
+  text:"Ellis's ABC model stands for:",
+  options:["Antecedent, Behaviour, Consequence","Activating event, Belief, Consequence","Anxiety, Behaviour, Cognition","Assessment, Baseline, Change"],
+  correct:1,
+  explanation:"Ellis's ABC model: Activating event triggers an irrational Belief, which leads to an emotional/behavioural Consequence."
+},
+{
+  id:"pp6",topic:"Psychopathology",type:"mcq",marks:1,
+  text:"Systematic desensitisation is based on which principle?",
+  options:["Operant conditioning","Classical conditioning and reciprocal inhibition","Cognitive restructuring","Psychoanalysis"],
+  correct:1,
+  explanation:"Systematic desensitisation uses counter-conditioning and reciprocal inhibition: you cannot be simultaneously relaxed and anxious."
+},
+{
+  id:"pp7",topic:"Psychopathology",type:"mcq",marks:1,
+  text:"Failure to function adequately is a definition of abnormality that focuses on:",
+  options:["Statistical rarity of behaviour","Deviation from social norms","An inability to cope with everyday living","Deviation from ideal mental health"],
+  correct:2,
+  explanation:"Failure to function adequately defines abnormality by whether someone can cope with the demands of everyday life."
+},
+{
+  id:"pp8",topic:"Psychopathology",type:"mcq",marks:1,
+  text:"Which definition of abnormality considers behaviours that break implicit or explicit societal rules?",
+  options:["Statistical infrequency","Deviation from social norms","Failure to function adequately","Deviation from ideal mental health"],
+  correct:1,
+  explanation:"Deviation from social norms defines abnormality as behaviour that violates society's accepted standards and rules."
+},
+{
+  id:"pp9",topic:"Psychopathology",type:"mcq",marks:1,
+  text:"Jahoda's criteria for ideal mental health include all EXCEPT:",
+  options:["Self-actualisation","Accurate perception of reality","Statistical normality","Environmental mastery"],
+  correct:2,
+  explanation:"Jahoda's six criteria include self-actualisation, accurate perception of reality, environmental mastery, autonomy, resistance to stress, and positive self-attitudes. Statistical normality is not one of them."
+},
+{
+  id:"pp10",topic:"Psychopathology",type:"mcq",marks:1,
+  text:"SSRIs work by:",
+  options:["Increasing dopamine production","Blocking serotonin reuptake at the synapse","Reducing noradrenaline levels","Increasing GABA activity"],
+  correct:1,
+  explanation:"SSRIs (Selective Serotonin Reuptake Inhibitors) block the reuptake of serotonin, increasing its availability at the synapse."
+},
+// ---- APPROACHES ----
+{
+  id:"ap1",topic:"Approaches",type:"mcq",marks:1,
+  text:"According to Freud, the ego operates on the:",
+  options:["Pleasure principle","Reality principle","Morality principle","Id principle"],
+  correct:1,
+  explanation:"The ego operates on the reality principle, mediating between the id's demands and the constraints of reality."
+},
+{
+  id:"ap2",topic:"Approaches",type:"mcq",marks:1,
+  text:"Wundt's method of introspection involved:",
+  options:["Dream analysis","Systematic self-observation of conscious experience","Brain scanning","Observing animal behaviour"],
+  correct:1,
+  explanation:"Wundt asked participants to systematically report their inner thoughts, sensations, and feelings in response to standardised stimuli."
+},
+{
+  id:"ap3",topic:"Approaches",type:"mcq",marks:1,
+  text:"In social learning theory, learning by watching a model being reinforced is called:",
+  options:["Direct reinforcement","Vicarious reinforcement","Negative reinforcement","Self-reinforcement"],
+  correct:1,
+  explanation:"Vicarious reinforcement occurs when we observe a model being rewarded for their behaviour, making us more likely to imitate it."
+},
+{
+  id:"ap4",topic:"Approaches",type:"mcq",marks:1,
+  text:"The humanistic concept of congruence refers to:",
+  options:["Agreement between id and ego","A match between self-concept and ideal self","Consistency in behaviour","Agreement between therapist and client"],
+  correct:1,
+  explanation:"Congruence in humanistic psychology is the match between a person's self-concept and their ideal self."
+},
+{
+  id:"ap5",topic:"Approaches",type:"mcq",marks:1,
+  text:"Which approach sees humans as information processors, similar to computers?",
+  options:["Biological approach","Behaviourist approach","Cognitive approach","Psychodynamic approach"],
+  correct:2,
+  explanation:"The cognitive approach uses the computer analogy, viewing the mind as an information processor with input, processing, and output."
+},
+{
+  id:"ap6",topic:"Approaches",type:"mcq",marks:1,
+  text:"Skinner's research primarily demonstrated which type of learning?",
+  options:["Classical conditioning","Operant conditioning","Social learning","Insight learning"],
+  correct:1,
+  explanation:"Skinner demonstrated operant conditioning using the Skinner box, showing how behaviour is shaped by its consequences."
+},
+{
+  id:"ap7",topic:"Approaches",type:"mcq",marks:1,
+  text:"Bandura's Bobo doll experiment demonstrated:",
+  options:["Classical conditioning","Operant conditioning","Observational learning and imitation","Innate aggression"],
+  correct:2,
+  explanation:"Bandura showed that children who observed an aggressive adult model were more likely to imitate that aggressive behaviour."
+},
+{
+  id:"ap8",topic:"Approaches",type:"mcq",marks:1,
+  text:"The superego represents:",
+  options:["Basic instincts and desires","The rational, decision-making part","The moral conscience","Unconscious memories"],
+  correct:2,
+  explanation:"The superego is the moral component of personality, representing internalised societal and parental values."
+},
+{
+  id:"ap9",topic:"Approaches",type:"mcq",marks:1,
+  text:"Which approach is considered the most deterministic?",
+  options:["Humanistic","Biological","Social learning theory","Cognitive"],
+  correct:1,
+  explanation:"The biological approach is considered highly deterministic as it suggests behaviour is determined by genes, neurochemistry, and brain structure."
+},
+{
+  id:"ap10",topic:"Approaches",type:"mcq",marks:1,
+  text:"Maslow's hierarchy of needs places which need at the top?",
+  options:["Safety needs","Love and belonging","Esteem","Self-actualisation"],
+  correct:3,
+  explanation:"Self-actualisation sits at the top of Maslow's hierarchy as the highest human need - achieving one's full potential."
+},
+// ---- BIOPSYCHOLOGY ----
+{
+  id:"bp1",topic:"Biopsychology",type:"mcq",marks:1,
+  text:"The fight or flight response is triggered by the:",
+  options:["Parasympathetic nervous system","Somatic nervous system","Sympathetic nervous system","Central nervous system"],
+  correct:2,
+  explanation:"The sympathetic division of the autonomic nervous system activates the fight or flight response."
+},
+{
+  id:"bp2",topic:"Biopsychology",type:"mcq",marks:1,
+  text:"Which brain structure acts as the main endogenous pacemaker for the sleep-wake cycle?",
+  options:["Pineal gland","Hypothalamus","Suprachiasmatic nucleus (SCN)","Pituitary gland"],
+  correct:2,
+  explanation:"The SCN in the hypothalamus acts as the body's master clock, regulating circadian rhythms."
+},
+{
+  id:"bp3",topic:"Biopsychology",type:"mcq",marks:1,
+  text:"Which is FALSE about the fight or flight response?",
+  options:["Heart rate increases","Adrenaline is released","Digestion speeds up","Blood is redirected to muscles"],
+  correct:2,
+  explanation:"Digestion slows down or stops during the fight or flight response, as blood is redirected to muscles and vital organs."
+},
+{
+  id:"bp4",topic:"Biopsychology",type:"mcq",marks:1,
+  text:"Hormones are best described as:",
+  options:["Electrical signals in neurons","Chemical messengers in the blood","Proteins in the brain","Neurotransmitters at synapses"],
+  correct:1,
+  explanation:"Hormones are chemical messengers secreted by glands that travel through the bloodstream to target organs."
+},
+{
+  id:"bp5",topic:"Biopsychology",type:"mcq",marks:1,
+  text:"Broca's area is associated with:",
+  options:["Speech comprehension","Speech production","Visual processing","Memory formation"],
+  correct:1,
+  explanation:"Broca's area in the left frontal lobe is responsible for speech production. Damage causes difficulty producing fluent speech."
+},
+{
+  id:"bp6",topic:"Biopsychology",type:"mcq",marks:1,
+  text:"Siffre's cave study demonstrated that without external cues, the sleep-wake cycle:",
+  options:["Stays at exactly 24 hours","Extends to approximately 25 hours","Shortens to 20 hours","Becomes random"],
+  correct:1,
+  explanation:"Siffre's studies showed the free-running biological clock settles around 24-25 hours without external zeitgebers."
+},
+{
+  id:"bp7",topic:"Biopsychology",type:"mcq",marks:1,
+  text:"The function of melatonin in the sleep-wake cycle is to:",
+  options:["Increase alertness","Induce drowsiness and sleep","Speed up metabolism","Enhance memory consolidation"],
+  correct:1,
+  explanation:"Melatonin, produced by the pineal gland in response to darkness, promotes drowsiness and sleep."
+},
+{
+  id:"bp8",topic:"Biopsychology",type:"mcq",marks:1,
+  text:"Which hemisphere of the brain primarily controls language in most people?",
+  options:["Right hemisphere","Left hemisphere","Both equally","It varies randomly"],
+  correct:1,
+  explanation:"The left hemisphere is dominant for language in approximately 95% of right-handed people."
+},
+{
+  id:"bp9",topic:"Biopsychology",type:"mcq",marks:1,
+  text:"Low serotonin levels have been linked to:",
+  options:["Schizophrenia","OCD and depression","Parkinson's disease","ADHD"],
+  correct:1,
+  explanation:"Low serotonin has been implicated in both OCD and depression, forming the basis for SSRI treatment."
+},
+{
+  id:"bp10",topic:"Biopsychology",type:"mcq",marks:1,
+  text:"Light acts as an exogenous zeitgeber by:",
+  options:["Directly stimulating the pineal gland","Being detected by the SCN via the optic nerve","Increasing body temperature","Releasing adrenaline"],
+  correct:1,
+  explanation:"Light enters the eye and signals are sent to the SCN via a specialised pathway from the retina, resetting the circadian clock."
+},
+// ---- RESEARCH METHODS ----
+{
+  id:"rm1",topic:"Research Methods",type:"mcq",marks:1,
+  text:"A quasi-experiment differs from a true experiment because:",
+  options:["It has no hypothesis","The IV is naturally occurring and cannot be manipulated","It uses no control group","It is always conducted in a lab"],
+  correct:1,
+  explanation:"In a quasi-experiment, the IV is pre-existing (e.g. age, gender) and cannot be randomly allocated by the researcher."
+},
+{
+  id:"rm2",topic:"Research Methods",type:"mcq",marks:1,
+  text:"Data collected first-hand by the researcher for their specific study is called:",
+  options:["Secondary data","Qualitative data","Primary data","Meta-data"],
+  correct:2,
+  explanation:"Primary data is original data collected directly by the researcher for the purpose of their investigation."
+},
+{
+  id:"rm3",topic:"Research Methods",type:"mcq",marks:1,
+  text:"If the mean, median, and mode of a data set are all equal, the distribution is:",
+  options:["Positively skewed","Negatively skewed","Normal","Bimodal"],
+  correct:2,
+  explanation:"In a normal distribution, the mean, median, and mode all have the same value and the distribution is symmetrical."
+},
+{
+  id:"rm4",topic:"Research Methods",type:"mcq",marks:1,
+  text:"A Type I error occurs when:",
+  options:["The null hypothesis is wrongly rejected","The alternative hypothesis is wrongly rejected","The sample is too small","The results cannot be replicated"],
+  correct:0,
+  explanation:"A Type I error is a false positive: rejecting the null hypothesis when it is actually true."
+},
+{
+  id:"rm5",topic:"Research Methods",type:"mcq",marks:1,
+  text:"Inter-observer reliability is assessed by:",
+  options:["One observer rating twice","Two or more observers independently rating the same behaviour","Comparing results across studies","Test-retest correlation"],
+  correct:1,
+  explanation:"Inter-observer reliability involves two or more independent observers rating the same behaviour and comparing their agreement."
+},
+{
+  id:"rm6",topic:"Research Methods",type:"mcq",marks:1,
+  text:"A limitation of qualitative data is that it:",
+  options:["Lacks depth and detail","Is difficult to analyse objectively","Cannot capture personal experiences","Is always unreliable"],
+  correct:1,
+  explanation:"Qualitative data, while rich in detail, can be difficult to analyse objectively as interpretation may be subjective."
+},
+{
+  id:"rm7",topic:"Research Methods",type:"mcq",marks:1,
+  text:"Pearson's r is an appropriate statistical test when:",
+  options:["Data is nominal and testing for difference","Data is ordinal and testing for association","Data is interval and testing for correlation","Data is nominal and testing for association"],
+  correct:2,
+  explanation:"Pearson's r tests for correlation with interval/ratio level data that is assumed to be normally distributed."
+},
+{
+  id:"rm8",topic:"Research Methods",type:"mcq",marks:1,
+  text:"In a stratified sample, participants are:",
+  options:["Selected by the researcher for convenience","Divided into subgroups and proportionally sampled","Chosen randomly from a hat","Selected every nth person from a list"],
+  correct:1,
+  explanation:"Stratified sampling divides the population into relevant subgroups (strata) and samples proportionally from each."
+},
+{
+  id:"rm9",topic:"Research Methods",type:"mcq",marks:1,
+  text:"A pilot study is conducted to:",
+  options:["Increase the sample size","Identify potential problems before the main study","Replicate previous findings","Ensure ethical approval"],
+  correct:1,
+  explanation:"A pilot study is a small-scale trial run to identify flaws in design, procedures, or materials before the main study."
+},
+{
+  id:"rm10",topic:"Research Methods",type:"mcq",marks:1,
+  text:"Demand characteristics are a threat to:",
+  options:["External validity","Internal validity","Ecological validity","Temporal validity"],
+  correct:1,
+  explanation:"Demand characteristics threaten internal validity because participants may change their behaviour based on cues about what the study expects."
+},
+// ---- ISSUES & DEBATES ----
+{
+  id:"id1",topic:"Issues & Debates",type:"mcq",marks:1,
+  text:"The nature-nurture debate in psychology concerns:",
+  options:["Whether behaviour is innate or learned","Whether research should be lab or field based","Whether humans have free will","Whether psychology is a science"],
+  correct:0,
+  explanation:"The nature-nurture debate considers the relative contributions of genetic inheritance (nature) and environmental factors (nurture) to behaviour."
+},
+{
+  id:"id2",topic:"Issues & Debates",type:"mcq",marks:1,
+  text:"A nomothetic approach in psychology aims to:",
+  options:["Study unique individuals in depth","Establish general laws of behaviour","Focus on subjective experience","Reject scientific methods"],
+  correct:1,
+  explanation:"The nomothetic approach seeks to establish general laws and principles that apply to large groups of people."
+},
+{
+  id:"id3",topic:"Issues & Debates",type:"mcq",marks:1,
+  text:"Gender bias in psychology that represents a male-centred view is called:",
+  options:["Ethnocentrism","Beta bias","Alpha bias","Androcentrism"],
+  correct:3,
+  explanation:"Androcentrism is the tendency to centre psychology around male experience and then apply findings to women."
+},
+{
+  id:"id4",topic:"Issues & Debates",type:"mcq",marks:1,
+  text:"Holism in psychology refers to:",
+  options:["Breaking behaviour down into components","Studying behaviour as a whole system","Focusing on biological factors only","Using only qualitative methods"],
+  correct:1,
+  explanation:"Holism is the idea that behaviour should be understood as a complete, integrated whole rather than broken into parts."
+},
+{
+  id:"id5",topic:"Issues & Debates",type:"mcq",marks:1,
+  text:"Cultural bias where one's own culture is seen as the standard is called:",
+  options:["Cultural relativism","Androcentrism","Ethnocentrism","Universality"],
+  correct:2,
+  explanation:"Ethnocentrism is the tendency to view the world from one's own cultural perspective, judging other cultures by those standards."
+},
+{
+  id:"id6",topic:"Issues & Debates",type:"mcq",marks:1,
+  text:"Alpha bias in gender research refers to:",
+  options:["Minimising differences between genders","Exaggerating differences between genders","Ignoring gender entirely","Studying only one gender"],
+  correct:1,
+  explanation:"Alpha bias exaggerates the differences between males and females, often portraying them as fundamentally different."
+},
+{
+  id:"id7",topic:"Issues & Debates",type:"mcq",marks:1,
+  text:"The idiographic approach emphasises:",
+  options:["Large sample studies","General laws of behaviour","The uniqueness of the individual","Experimental methods"],
+  correct:2,
+  explanation:"The idiographic approach focuses on in-depth study of unique individuals rather than establishing general laws."
+},
+{
+  id:"id8",topic:"Issues & Debates",type:"mcq",marks:1,
+  text:"Socially sensitive research is defined as research that:",
+  options:["Uses deception","Has consequences for the group being studied","Is conducted in naturalistic settings","Involves animals"],
+  correct:1,
+  explanation:"Socially sensitive research has potential consequences, implications, or applications for the participants or the social group they represent."
+},
+// ---- SCHIZOPHRENIA (Paper 3) ----
+{
+  id:"sz1",topic:"Schizophrenia",type:"mcq",marks:1,
+  text:"Which neurotransmitter is most associated with the dopamine hypothesis of schizophrenia?",
+  options:["Serotonin","GABA","Dopamine","Glutamate"],
+  correct:2,
+  explanation:"The dopamine hypothesis suggests schizophrenia is caused by excessive dopamine activity in certain brain pathways."
+},
+{
+  id:"sz2",topic:"Schizophrenia",type:"mcq",marks:1,
+  text:"Positive symptoms of schizophrenia include:",
+  options:["Avolition and flat affect","Hallucinations and delusions","Poverty of speech","Social withdrawal"],
+  correct:1,
+  explanation:"Positive symptoms are additional experiences like hallucinations (false perceptions) and delusions (false beliefs)."
+},
+{
+  id:"sz3",topic:"Schizophrenia",type:"mcq",marks:1,
+  text:"Negative symptoms of schizophrenia include:",
+  options:["Delusions and thought disorder","Hallucinations and paranoia","Avolition and speech poverty","Aggression and mania"],
+  correct:2,
+  explanation:"Negative symptoms involve the loss of normal functioning, including avolition (loss of motivation) and speech poverty."
+},
+{
+  id:"sz4",topic:"Schizophrenia",type:"mcq",marks:1,
+  text:"Typical antipsychotics like chlorpromazine work by:",
+  options:["Increasing serotonin","Blocking dopamine receptors","Increasing GABA activity","Blocking noradrenaline"],
+  correct:1,
+  explanation:"Typical antipsychotics are dopamine antagonists that block dopamine receptors, particularly D2 receptors."
+},
+{
+  id:"sz5",topic:"Schizophrenia",type:"mcq",marks:1,
+  text:"CBT for schizophrenia primarily aims to:",
+  options:["Cure the disorder completely","Challenge and test delusional beliefs","Replace all medication","Analyse unconscious conflicts"],
+  correct:1,
+  explanation:"CBT for schizophrenia helps patients identify and challenge irrational thoughts and test the reality of their beliefs."
+},
+// ---- RELATIONSHIPS (Paper 3) ----
+{
+  id:"rl1",topic:"Relationships",type:"mcq",marks:1,
+  text:"According to the filter theory of attraction, the first filter is:",
+  options:["Complementarity","Physical attractiveness","Social demography","Attitudes"],
+  correct:2,
+  explanation:"Kerckhoff and Davis's filter theory proposes social demography (proximity, social class) as the first filter in relationship formation."
+},
+{
+  id:"rl2",topic:"Relationships",type:"mcq",marks:1,
+  text:"The matching hypothesis suggests that people:",
+  options:["Seek the most attractive partner possible","Form relationships with similarly attractive partners","Prefer partners who are opposite to them","Choose partners based on wealth"],
+  correct:1,
+  explanation:"The matching hypothesis proposes that people are more likely to form relationships with others of similar perceived attractiveness."
+},
+{
+  id:"rl3",topic:"Relationships",type:"mcq",marks:1,
+  text:"Social exchange theory views relationships in terms of:",
+  options:["Emotional bonding","Costs and rewards","Evolutionary fitness","Attachment style"],
+  correct:1,
+  explanation:"Social exchange theory proposes that people evaluate relationships by weighing up the costs and rewards involved."
+},
+{
+  id:"rl4",topic:"Relationships",type:"mcq",marks:1,
+  text:"Equity theory differs from social exchange theory by emphasising:",
+  options:["Maximising personal profit","Fairness in the balance of costs and rewards","Physical attraction","Emotional investment only"],
+  correct:1,
+  explanation:"Equity theory focuses on perceived fairness - both partners should feel their ratio of costs to rewards is roughly equal."
+},
+{
+  id:"rl5",topic:"Relationships",type:"mcq",marks:1,
+  text:"Duck's model of relationship breakdown begins with which phase?",
+  options:["Dyadic phase","Social phase","Intra-psychic phase","Grave-dressing phase"],
+  correct:2,
+  explanation:"Duck's model starts with the intra-psychic phase where one partner privately reflects on dissatisfaction with the relationship."
+},
+// ---- AGGRESSION (Paper 3) ----
+{
+  id:"ag1",topic:"Aggression",type:"mcq",marks:1,
+  text:"The frustration-aggression hypothesis states that:",
+  options:["Aggression is always instinctive","Frustration always leads to aggression","Aggression is a learned behaviour only","Aggression occurs randomly"],
+  correct:1,
+  explanation:"Dollard et al. proposed that frustration always leads to some form of aggression, and aggression is always caused by frustration."
+},
+{
+  id:"ag2",topic:"Aggression",type:"mcq",marks:1,
+  text:"Deindividuation suggests aggression increases when:",
+  options:["People feel identifiable","People lose their sense of individual identity","People are alone","People are in small groups"],
+  correct:1,
+  explanation:"Deindividuation theory proposes that being anonymous in a group reduces self-awareness and weakens normal restraints on behaviour."
+},
+{
+  id:"ag3",topic:"Aggression",type:"mcq",marks:1,
+  text:"According to the MAOA gene research, which genotype is linked to aggression when combined with childhood maltreatment?",
+  options:["High MAOA activity","Low MAOA activity (warrior gene)","Medium MAOA activity","No MAOA activity"],
+  correct:1,
+  explanation:"Brunner et al. and Caspi et al. found that low MAOA activity combined with childhood maltreatment was associated with increased aggression."
+},
+{
+  id:"ag4",topic:"Aggression",type:"mcq",marks:1,
+  text:"Which hormone is most associated with aggressive behaviour?",
+  options:["Oestrogen","Cortisol","Testosterone","Melatonin"],
+  correct:2,
+  explanation:"Testosterone has been consistently linked to aggression, with higher levels associated with more aggressive behaviour."
+},
+{
+  id:"ag5",topic:"Aggression",type:"mcq",marks:1,
+  text:"Institutional aggression in prisons is explained by the importation model as being caused by:",
+  options:["The prison environment itself","Characteristics inmates bring with them","Guard behaviour","Prison overcrowding"],
+  correct:1,
+  explanation:"Irwin and Cressey's importation model argues prisoners bring pre-existing characteristics (values, attitudes, experiences) that influence aggression."
+},
+// ---- FORENSIC PSYCHOLOGY (Paper 3) ----
+{
+  id:"fp1",topic:"Forensic Psychology",type:"mcq",marks:1,
+  text:"Eysenck's theory proposes that criminals are more likely to score high on:",
+  options:["Extraversion and agreeableness","Neuroticism and extraversion","Conscientiousness and openness","Introversion and stability"],
+  correct:1,
+  explanation:"Eysenck proposed that criminals score high on neuroticism and extraversion (and later added psychoticism)."
+},
+{
+  id:"fp2",topic:"Forensic Psychology",type:"mcq",marks:1,
+  text:"Cognitive distortions in offenders include:",
+  options:["Accurate perception of events","Minimisation and hostile attribution bias","Enhanced empathy","Logical reasoning patterns"],
+  correct:1,
+  explanation:"Cognitive distortions in offenders include minimisation (downplaying seriousness) and hostile attribution bias (interpreting neutral cues as hostile)."
+},
+{
+  id:"fp3",topic:"Forensic Psychology",type:"mcq",marks:1,
+  text:"Differential association theory was proposed by:",
+  options:["Bandura","Eysenck","Sutherland","Freud"],
+  correct:2,
+  explanation:"Sutherland's differential association theory proposes that criminal behaviour is learned through interaction with others who hold pro-criminal attitudes."
+},
+{
+  id:"fp4",topic:"Forensic Psychology",type:"mcq",marks:1,
+  text:"Restorative justice involves:",
+  options:["Harsher prison sentences","Offenders meeting and making amends with victims","Solitary confinement","Electronic monitoring"],
+  correct:1,
+  explanation:"Restorative justice brings offenders face-to-face with their victims to understand the impact of their crime and make amends."
+},
+{
+  id:"fp5",topic:"Forensic Psychology",type:"mcq",marks:1,
+  text:"Top-down profiling (the FBI approach) classifies offenders as:",
+  options:["Psychotic or neurotic","Organised or disorganised","Introvert or extrovert","Passive or aggressive"],
+  correct:1,
+  explanation:"The FBI's top-down typology approach classifies crime scenes and offenders as either organised or disorganised."
+},
+// ---- 16-MARKER PUZZLE QUESTIONS ----
+{
+  id:"p16_1",topic:"Attachment",type:"puzzle16",marks:16,
+  text:"Discuss Romanian orphan studies.",
+  pieces:[
+    {ao:"AO1",text:"Romanian orphans were raised in extremely poor conditions with a very high child-to-staff ratio and minimal emotional care after the fall of the communist regime."},
+    {ao:"AO1",text:"Rutter's ERA study tracked 165 Romanian adoptees against 52 British controls, assessing development at ages 4, 6, 11, and 15."},
+    {ao:"AO1",text:"Key findings showed that at age 4, half of the adoptees were intellectually delayed. Recovery rates were related to age of adoption."},
+    {ao:"AO1",text:"Children adopted after 6 months displayed disinhibited attachment, quasi-autism, delayed language development, and poor physical growth."},
+    {ao:"AO3",text:"The findings have important implications for children in care, suggesting that early adoption (before 6 months) can mediate the effects of institutionalisation."},
+    {ao:"AO3",text:"It is difficult to generalise from Romanian orphan studies because the conditions in Romanian institutions were so extreme compared to typical institutional care."},
+    {ao:"AO3",text:"The findings suggest that Bowlby's critical period may be more of a sensitive period, as children showed some recovery with adequate aftercare."},
+    {ao:"AO3",text:"A strength is that the research by Zeanah et al. used a randomised controlled trial design, which gives the study higher internal validity."},
+    {ao:"AO3",text:"A limitation is the lack of adult follow-up data at the time, making it difficult to draw conclusions about the long-term permanence of institutional effects."},
+    {ao:"AO3",text:"There may be a confounding variable of sociability in adopted children, as more sociable children may have been selected for adoption."}
+  ]
+},
+{
+  id:"p16_2",topic:"Psychopathology",type:"puzzle16",marks:16,
+  text:"Discuss the cognitive approach to explaining depression.",
+  pieces:[
+    {ao:"AO1",text:"Cognitive explanations suggest that some people are more vulnerable to depression because of faulty thinking patterns."},
+    {ao:"AO1",text:"Beck's theory identifies the negative triad: negative views about the self, the world, and the future, triggered by negative self-schemas from childhood."},
+    {ao:"AO1",text:"Beck also described faulty information processing such as overgeneralisation and magnification of negative events."},
+    {ao:"AO1",text:"Ellis's ABC model explains depression through activating events triggering irrational beliefs (such as 'musterbation'), leading to emotional consequences."},
+    {ao:"AO3",text:"Research support comes from Clark and Beck, who found that cognitive vulnerabilities preceded the onset of depression, supporting the theory's direction of causation."},
+    {ao:"AO3",text:"A practical application is that cognitive explanations form the theoretical basis of CBT, which has been shown to be effective in treating depression."},
+    {ao:"AO3",text:"However, depression may be more related to social circumstances such as extreme poverty rather than negative cognitions alone."},
+    {ao:"AO3",text:"Beck's theory may be better at explaining endogenous depression, while Ellis's model may be more applicable to reactive depression."},
+    {ao:"AO3",text:"A limitation is that cognitive explanations tend to underplay the emotional aspects of the disorder, focusing too heavily on thinking patterns."},
+    {ao:"AO3",text:"An alternative explanation is the neurochemical basis of depression involving low serotonin, suggesting biology may be more important than cognition."}
+  ]
+},
+{
+  id:"p16_3",topic:"Social Influence",type:"puzzle16",marks:16,
+  text:"Discuss research into conformity.",
+  pieces:[
+    {ao:"AO1",text:"Asch's line experiment demonstrated conformity rates of 36.8% on critical trials where participants matched an obviously incorrect answer chosen by confederates."},
+    {ao:"AO1",text:"Conformity can be explained by normative social influence (desire to fit in) and informational social influence (looking to others for guidance)."},
+    {ao:"AO1",text:"Types of conformity include compliance (publicly agreeing, privately disagreeing), identification (conforming to a valued group), and internalisation (genuinely accepting the group view)."},
+    {ao:"AO1",text:"Asch found conformity was affected by group size (increasing up to 3-4), unanimity (one dissenter reduced conformity), and task difficulty."},
+    {ao:"AO3",text:"A strength of Asch's study is that it was conducted under controlled laboratory conditions, allowing cause and effect to be established between group pressure and conformity."},
+    {ao:"AO3",text:"However, Asch's study has been criticised for lacking ecological validity as the task (judging line lengths) is artificial and unlike real-life conformity situations."},
+    {ao:"AO3",text:"The study may be culturally biased as it was conducted in 1950s America, an era of McCarthyism when conformity was high. Perrin and Spencer found lower conformity rates in 1980s Britain."},
+    {ao:"AO3",text:"Asch's study raises ethical issues including deception and potential psychological harm from the discomfort of going against one's own judgement."},
+    {ao:"AO3",text:"Research by Smith and Bond found higher conformity rates in collectivist cultures compared to individualist cultures, suggesting conformity is influenced by cultural values."},
+    {ao:"AO3",text:"A further limitation is that demand characteristics may have influenced the results, as participants may have guessed the purpose of the study and altered their behaviour."}
+  ]
+},
+{
+  id:"p16_4",topic:"Biopsychology",type:"puzzle16",marks:16,
+  text:"Discuss research into the effects of endogenous pacemakers and exogenous zeitgebers on the sleep/wake cycle.",
+  pieces:[
+    {ao:"AO1",text:"The suprachiasmatic nucleus (SCN) is the main endogenous pacemaker, located in the hypothalamus, receiving light information directly from the retina."},
+    {ao:"AO1",text:"The SCN signals the pineal gland to produce melatonin, which induces sleep when light levels drop."},
+    {ao:"AO1",text:"Exogenous zeitgebers are external cues such as light, social cues, and temperature that help reset the internal body clock to the 24-hour day."},
+    {ao:"AO1",text:"Siffre spent extended periods in caves without time cues and found his sleep-wake cycle extended to around 25 hours, demonstrating a free-running rhythm."},
+    {ao:"AO3",text:"Research support comes from DeCoursey et al., who destroyed the SCN in chipmunks and found they lost their regular sleep-wake patterns, confirming its role as a pacemaker."},
+    {ao:"AO3",text:"Ralph et al. transplanted SCN cells from mutant hamsters into normal hamsters, who then adopted the mutant 20-hour cycle, providing strong evidence for the SCN's role."},
+    {ao:"AO3",text:"However, Siffre's cave study is a case study with limited generalisability and there are individual differences in circadian rhythms (e.g. owls vs larks)."},
+    {ao:"AO3",text:"Research suggests that endogenous and exogenous factors interact as a system rather than working independently, supporting an interactionist approach."},
+    {ao:"AO3",text:"Practical applications include understanding jet lag and shift work, where the internal clock becomes desynchronised from external zeitgebers."},
+    {ao:"AO3",text:"A limitation of much evidence is that it comes from animal studies, which may not generalise directly to human circadian rhythms due to species differences."}
+  ]
+},
+{
+  id:"p16_5",topic:"Approaches",type:"puzzle16",marks:16,
+  text:"Compare operant conditioning with social learning theory.",
+  pieces:[
+    {ao:"AO1",text:"Operant conditioning explains learning through consequences: behaviour is shaped by positive reinforcement, negative reinforcement, and punishment."},
+    {ao:"AO1",text:"Skinner demonstrated operant conditioning using the Skinner box, showing animals learn to repeat behaviours that lead to rewards."},
+    {ao:"AO1",text:"Social learning theory (Bandura) proposes that learning also occurs through observation and imitation of role models, involving vicarious reinforcement."},
+    {ao:"AO3",text:"A key difference is that reinforcement in operant conditioning is direct, whereas in social learning it can be vicarious (observing others being reinforced)."},
+    {ao:"AO3",text:"Both approaches share the assumption that human development is a consequence of nurture - both suggest behaviour results from environmental learning."},
+    {ao:"AO3",text:"Operant conditioning takes a hard determinism position (all behaviour is environmentally determined), while social learning assumes soft determinism, allowing for cognitive mediation."},
+    {ao:"AO3",text:"Social learning theory is less reductionist than operant conditioning because it accounts for cognitive mediational processes (attention, retention, motivation, reproduction)."},
+    {ao:"AO3",text:"Operant conditioning breaks complex actions into simple stimulus-response units, whereas social learning allows for the role of modelling and identification in complex behaviours."},
+    {ao:"AO3",text:"Both approaches are nomothetic, seeking general laws of behaviour using laboratory experiments and generalising findings to wider populations."},
+    {ao:"AO3",text:"Bandura's Bobo doll study provides strong evidence for social learning, but the ecological validity of watching children hit a doll has been questioned."}
+  ]
+},
+{
+  id:"p16_6",topic:"Memory",type:"puzzle16",marks:16,
+  text:"Discuss the effect of post-event discussion on the accuracy of eyewitness testimony.",
+  pieces:[
+    {ao:"AO1",text:"Post-event discussion occurs when witnesses discuss what they have seen with co-witnesses or other people after an event."},
+    {ao:"AO1",text:"This can lead to contamination of memory, creating unreliable recall, false memories, or confabulation, reducing accuracy of eyewitness testimony."},
+    {ao:"AO1",text:"Two explanations exist: the conformity effect (witnesses copy others' accounts for social approval) and source monitoring errors (confusing where information came from)."},
+    {ao:"AO2",text:"A witness may initially be convinced about details but later realise they may have been repeating what they heard from other witnesses."},
+    {ao:"AO3",text:"Gabbert et al. found that 71% of participants mistakenly recalled aspects of an event they had picked up from discussing it with a co-witness."},
+    {ao:"AO3",text:"Bodner et al. found that the effects of post-event discussion can be reduced if participants are warned about potential contamination effects in advance."},
+    {ao:"AO3",text:"A limitation is the difficulty in distinguishing between the conformity explanation and the source monitoring explanation in real-world situations."},
+    {ao:"AO3",text:"Post-event discussion research has practical applications for police procedures, supporting the practice of separating witnesses before taking statements."},
+    {ao:"AO3",text:"However, much of the research is conducted in laboratory settings using artificial scenarios, reducing the ecological validity of findings."},
+    {ao:"AO3",text:"Alternative factors such as leading questions, anxiety, and weapon focus may also affect eyewitness accuracy, not just post-event discussion."}
+  ]
+},
+{
+  id:"p16_7",topic:"Schizophrenia",type:"puzzle16",marks:16,
+  text:"Discuss biological explanations for schizophrenia.",
+  pieces:[
+    {ao:"AO1",text:"The dopamine hypothesis proposes that schizophrenia is caused by excess dopamine activity in certain brain pathways, particularly the mesolimbic pathway."},
+    {ao:"AO1",text:"Genetic explanations suggest schizophrenia runs in families. Gottesman found concordance rates of 48% for MZ twins and 17% for DZ twins."},
+    {ao:"AO1",text:"Neural correlates of schizophrenia include enlarged ventricles and reduced prefrontal cortex activity, observed through brain imaging studies."},
+    {ao:"AO1",text:"The original dopamine hypothesis focused on excess dopamine, but the revised version suggests both high and low dopamine in different brain regions."},
+    {ao:"AO3",text:"Support for the dopamine hypothesis comes from the effectiveness of antipsychotic drugs that block dopamine receptors in reducing positive symptoms."},
+    {ao:"AO3",text:"However, the dopamine hypothesis is reductionist as it reduces a complex disorder to neurotransmitter levels, ignoring psychological and social factors."},
+    {ao:"AO3",text:"Twin studies have methodological limitations: MZ twins often share more similar environments, making it difficult to separate genetic from environmental influences."},
+    {ao:"AO3",text:"The fact that MZ twin concordance is not 100% indicates that genes alone cannot fully explain schizophrenia; environmental triggers must also play a role."},
+    {ao:"AO3",text:"Biological explanations have led to effective drug treatments, supporting the idea that biology plays a significant role in the disorder."},
+    {ao:"AO3",text:"The diathesis-stress model offers an interactionist alternative, suggesting genetic vulnerability combined with environmental stressors triggers the disorder."}
+  ]
+},
+{
+  id:"p16_8",topic:"Forensic Psychology",type:"puzzle16",marks:16,
+  text:"Discuss psychological explanations of offending behaviour.",
+  pieces:[
+    {ao:"AO1",text:"Eysenck proposed that criminal behaviour is linked to personality dimensions: criminals tend to score high on extraversion, neuroticism, and psychoticism."},
+    {ao:"AO1",text:"Eysenck suggested that extraverts have an underactive nervous system, requiring more stimulation and being harder to condition into pro-social behaviour."},
+    {ao:"AO1",text:"Cognitive explanations focus on cognitive distortions in offenders, including hostile attribution bias and minimisation of their criminal actions."},
+    {ao:"AO1",text:"Sutherland's differential association theory proposes criminal behaviour is learned through interaction with intimate personal groups that hold pro-criminal attitudes."},
+    {ao:"AO3",text:"A strength of Eysenck's theory is that it can be tested empirically using personality questionnaires, supporting its scientific credibility."},
+    {ao:"AO3",text:"However, research findings are mixed: not all studies find the predicted personality profile in offenders, undermining the theory's reliability."},
+    {ao:"AO3",text:"Cognitive distortions may be a consequence of offending rather than a cause, making it difficult to establish cause and effect."},
+    {ao:"AO3",text:"Differential association theory is supported by evidence that crime rates are higher in areas where pro-criminal attitudes are more prevalent."},
+    {ao:"AO3",text:"A limitation of psychological explanations is that they may be reductionist, ignoring social and economic factors such as poverty and inequality."},
+    {ao:"AO3",text:"These explanations have practical applications: understanding cognitive distortions informs CBT programmes used in offender rehabilitation."}
+  ]
+}
+];
+
+// ============================================
+// GAME STATE
+// ============================================
+let state = {
+  mode: 10,
+  topics: [],
+  questions: [],
+  currentIndex: 0,
+  score: 0,
+  maxScore: 0,
+  streak: 0,
+  bestStreak: 0,
+  startTime: 0,
+  answered: false,
+  puzzleState: null
+};
+
+// ============================================
+// TOPIC MANAGEMENT
+// ============================================
+function getTopics() {
+  const topics = new Set();
+  QUESTIONS.forEach(q => topics.add(q.topic));
+  return [...topics].sort();
+}
+
+function renderTopics() {
+  const grid = document.getElementById('topicGrid');
+  const topics = getTopics();
+  const counts = {};
+  QUESTIONS.forEach(q => { counts[q.topic] = (counts[q.topic] || 0) + 1; });
+
+  grid.innerHTML = topics.map(t => `
+    <button class="topic-btn selected" data-topic="${t}" onclick="toggleTopic(this)">
+      <div class="topic-name">${t}</div>
+      <div class="topic-count">${counts[t]} questions</div>
+    </button>
+  `).join('');
+  state.topics = [...topics];
+}
+
+function toggleTopic(btn) {
+  btn.classList.toggle('selected');
+  const topic = btn.dataset.topic;
+  if (btn.classList.contains('selected')) {
+    if (!state.topics.includes(topic)) state.topics.push(topic);
+  } else {
+    state.topics = state.topics.filter(t => t !== topic);
+  }
+}
+
+function toggleAllTopics() {
+  const btns = document.querySelectorAll('.topic-btn');
+  const allSelected = [...btns].every(b => b.classList.contains('selected'));
+  btns.forEach(b => {
+    if (allSelected) {
+      b.classList.remove('selected');
+    } else {
+      b.classList.add('selected');
+    }
+  });
+  state.topics = allSelected ? [] : getTopics();
+}
+
+// ============================================
+// NAVIGATION
+// ============================================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (id === 'leaderboard') renderLeaderboard();
+  if (id === 'topic-select') renderTopics();
+}
+
+function selectMode(n) {
+  state.mode = n;
+  showScreen('topic-select');
+}
+
+// ============================================
+// GAME LOGIC
+// ============================================
+function startGame() {
+  if (state.topics.length === 0) {
+    alert('Please select at least one topic.');
+    return;
+  }
+
+  // Filter and shuffle questions
+  let pool = QUESTIONS.filter(q => state.topics.includes(q.topic));
+  pool = shuffle([...pool]);
+
+  // For the selected mode, pick the right number
+  // Ensure at least ~15% are puzzle questions if available
+  const puzzles = pool.filter(q => q.type === 'puzzle16');
+  const mcqs = pool.filter(q => q.type === 'mcq');
+
+  let selected = [];
+  const targetPuzzles = Math.min(puzzles.length, Math.max(1, Math.floor(state.mode * 0.12)));
+
+  if (state.mode <= puzzles.length + mcqs.length) {
+    selected = shuffle([...puzzles.slice(0, targetPuzzles), ...mcqs.slice(0, state.mode - targetPuzzles)]);
+  } else {
+    // Not enough unique questions - recycle
+    selected = shuffle([...pool]);
+    while (selected.length < state.mode) {
+      selected.push(...shuffle([...pool]));
+    }
+  }
+  selected = selected.slice(0, state.mode);
+
+  state.questions = selected;
+  state.currentIndex = 0;
+  state.score = 0;
+  state.maxScore = selected.reduce((s, q) => s + q.marks, 0);
+  state.streak = 0;
+  state.bestStreak = 0;
+  state.startTime = Date.now();
+  state.answered = false;
+
+  showScreen('quiz');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = state.questions[state.currentIndex];
+  state.answered = false;
+
+  // Update header
+  document.getElementById('qNumber').textContent = `${state.currentIndex + 1}/${state.questions.length}`;
+  document.getElementById('scoreDisplay').textContent = state.score;
+  document.getElementById('progressFill').style.width = `${(state.currentIndex / state.questions.length) * 100}%`;
+  updateStreak();
+
+  const card = document.getElementById('questionCard');
+  card.className = 'card fade-in';
+  document.getElementById('feedbackBox').innerHTML = '';
+
+  if (q.type === 'mcq') {
+    renderMCQ(q, card);
+  } else if (q.type === 'puzzle16') {
+    renderPuzzle(q, card);
+  }
+
+  // Action buttons
+  document.getElementById('actionButtons').innerHTML = '';
+  updateTimer();
+}
+
+function renderMCQ(q, card) {
+  const badges = `
+    <div class="question-meta">
+      <span class="badge badge-topic">${q.topic}</span>
+      <span class="badge badge-marks">${q.marks} mark${q.marks > 1 ? 's' : ''}</span>
+    </div>
+  `;
+
+  card.innerHTML = `
+    ${badges}
+    ${q.context ? `<div class="question-context">${q.context}</div>` : ''}
+    <div class="question-text">${q.text}</div>
+    <div class="options-list">
+      ${q.options.map((opt, i) => `
+        <button class="option-btn" data-idx="${i}" onclick="selectMCQ(${i})">
+          <span class="option-letter">${String.fromCharCode(65 + i)}</span>${opt}
+        </button>
+      `).join('')}
+    </div>
+  `;
+}
+
+function selectMCQ(idx) {
+  if (state.answered) return;
+  state.answered = true;
+
+  const q = state.questions[state.currentIndex];
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach(b => b.classList.add('locked'));
+
+  const isCorrect = idx === q.correct;
+
+  btns[q.correct].classList.add('correct');
+  if (!isCorrect) {
+    btns[idx].classList.add('incorrect');
+    btns[idx].classList.add('shake');
+  }
+
+  if (isCorrect) {
+    state.score += q.marks;
+    state.streak++;
+    if (state.streak > state.bestStreak) state.bestStreak = state.streak;
+  } else {
+    state.streak = 0;
+  }
+
+  document.getElementById('scoreDisplay').textContent = state.score;
+  updateStreak();
+
+  showFeedback(isCorrect, q.explanation, isCorrect ? q.marks : 0, q.marks);
+  showNextButton();
+}
+
+// ============================================
+// 16-MARKER PUZZLE
+// ============================================
+function renderPuzzle(q, card) {
+  // Shuffle pieces for the bank
+  const shuffledPieces = shuffle(q.pieces.map((p, i) => ({...p, origIdx: i})));
+
+  state.puzzleState = {
+    pieces: shuffledPieces,
+    zones: { AO1: [], AO2: [], AO3: [] },
+    bank: shuffledPieces.map((_, i) => i),
+    question: q
+  };
+
+  const badges = `
+    <div class="question-meta">
+      <span class="badge badge-topic">${q.topic}</span>
+      <span class="badge badge-marks">${q.marks} marks</span>
+      <span class="badge badge-ao1">AO1</span>
+      <span class="badge badge-ao2">AO2</span>
+      <span class="badge badge-ao3">AO3</span>
+    </div>
+  `;
+
+  // Determine which AO types exist
+  const aoTypes = [...new Set(q.pieces.map(p => p.ao))].sort();
+
+  card.innerHTML = `
+    ${badges}
+    <div class="question-text">${q.text}</div>
+    <div class="puzzle-intro">Drag the pieces into the correct AO zones in a logical order. Each piece is colour-coded by its correct AO type.</div>
+
+    ${aoTypes.map(ao => `
+      <div class="puzzle-zone-label"><span class="dot dot-${ao.toLowerCase()}"></span> ${ao} ${ao === 'AO1' ? '(Knowledge)' : ao === 'AO2' ? '(Application)' : '(Evaluation)'}</div>
+      <div class="puzzle-zone" id="zone-${ao}" data-ao="${ao}"
+           ondragover="puzzleDragOver(event)" ondrop="puzzleDrop(event)" ondragleave="puzzleDragLeave(event)">
+      </div>
+    `).join('')}
+
+    <div class="puzzle-pieces-bank" id="puzzleBank" ondragover="puzzleDragOver(event)" ondrop="puzzleDropBank(event)" ondragleave="puzzleDragLeave(event)">
+      <div class="puzzle-pieces-bank-label">Available Pieces</div>
+      <div id="bankPieces">
+        ${shuffledPieces.map((p, i) => puzzlePieceHTML(p, i)).join('')}
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="submitPuzzle()">Submit Answer</button>
+  `;
+
+  // Add touch support
+  initTouchDrag();
+}
+
+function puzzlePieceHTML(piece, idx) {
+  return `<div class="puzzle-piece ${piece.ao.toLowerCase()}" draggable="true" data-idx="${idx}"
+    ondragstart="puzzleDragStart(event)">${piece.text}</div>`;
+}
+
+function puzzleDragStart(e) {
+  e.dataTransfer.setData('text/plain', e.target.dataset.idx);
+  e.dataTransfer.effectAllowed = 'move';
+  e.target.style.opacity = '0.5';
+  setTimeout(() => e.target.style.opacity = '1', 0);
+}
+
+function puzzleDragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  e.currentTarget.classList.add('drag-over');
+}
+
+function puzzleDragLeave(e) {
+  e.currentTarget.classList.remove('drag-over');
+}
+
+function puzzleDrop(e) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  const idx = parseInt(e.dataTransfer.getData('text/plain'));
+  const targetAO = e.currentTarget.dataset.ao;
+
+  // Remove from current location
+  removePieceFromAll(idx);
+
+  // Add to zone
+  state.puzzleState.zones[targetAO].push(idx);
+
+  renderPuzzleState();
+}
+
+function puzzleDropBank(e) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  const idx = parseInt(e.dataTransfer.getData('text/plain'));
+
+  // Remove from current location
+  removePieceFromAll(idx);
+
+  // Add back to bank
+  state.puzzleState.bank.push(idx);
+
+  renderPuzzleState();
+}
+
+function removePieceFromAll(idx) {
+  const ps = state.puzzleState;
+  ps.bank = ps.bank.filter(i => i !== idx);
+  for (const ao of Object.keys(ps.zones)) {
+    ps.zones[ao] = ps.zones[ao].filter(i => i !== idx);
+  }
+}
+
+function renderPuzzleState() {
+  const ps = state.puzzleState;
+
+  // Render zones
+  for (const ao of Object.keys(ps.zones)) {
+    const zone = document.getElementById(`zone-${ao}`);
+    if (!zone) continue;
+    zone.innerHTML = ps.zones[ao].map(idx => {
+      const p = ps.pieces[idx];
+      return `<div class="puzzle-piece ${p.ao.toLowerCase()} in-zone" draggable="true" data-idx="${idx}"
+        ondragstart="puzzleDragStart(event)">${p.text}</div>`;
+    }).join('') || '';
+  }
+
+  // Render bank
+  const bankEl = document.getElementById('bankPieces');
+  if (bankEl) {
+    bankEl.innerHTML = ps.bank.map(idx => {
+      const p = ps.pieces[idx];
+      return puzzlePieceHTML(p, idx);
+    }).join('') || '<span style="color:var(--muted);font-size:0.85rem">All pieces placed!</span>';
+  }
+
+  initTouchDrag();
+}
+
+function submitPuzzle() {
+  if (state.answered) return;
+  state.answered = true;
+
+  const ps = state.puzzleState;
+  const q = ps.question;
+  let correctPlacements = 0;
+  let totalPieces = q.pieces.length;
+
+  // Check each piece's zone placement
+  for (const ao of Object.keys(ps.zones)) {
+    for (const idx of ps.zones[ao]) {
+      const piece = ps.pieces[idx];
+      if (piece.ao === ao) {
+        correctPlacements++;
+      }
+    }
+  }
+
+  // Pieces left in bank get 0
+  const pctCorrect = correctPlacements / totalPieces;
+  const earned = Math.round(pctCorrect * q.marks);
+
+  state.score += earned;
+  if (pctCorrect >= 0.8) {
+    state.streak++;
+    if (state.streak > state.bestStreak) state.bestStreak = state.streak;
+  } else {
+    state.streak = 0;
+  }
+
+  document.getElementById('scoreDisplay').textContent = state.score;
+  updateStreak();
+
+  // Mark pieces
+  for (const ao of Object.keys(ps.zones)) {
+    const zone = document.getElementById(`zone-${ao}`);
+    if (!zone) continue;
+    const pieceDivs = zone.querySelectorAll('.puzzle-piece');
+    pieceDivs.forEach(div => {
+      const idx = parseInt(div.dataset.idx);
+      const piece = ps.pieces[idx];
+      div.draggable = false;
+      if (piece.ao === ao) {
+        div.classList.add('correct-pos');
+      } else {
+        div.classList.add('incorrect-pos');
+        div.innerHTML += ` <span style="font-size:0.75rem;font-weight:600;color:var(--error);">(${piece.ao})</span>`;
+      }
+    });
+  }
+
+  // Mark bank pieces as wrong (shouldn't be there)
+  const bankPieceDivs = document.querySelectorAll('#bankPieces .puzzle-piece');
+  bankPieceDivs.forEach(div => {
+    div.draggable = false;
+    div.classList.add('incorrect-pos');
+  });
+
+  const isCorrect = pctCorrect >= 0.8;
+  const isPartial = pctCorrect >= 0.4 && pctCorrect < 0.8;
+
+  let msg = '';
+  if (isCorrect) {
+    msg = `Excellent! You correctly placed ${correctPlacements}/${totalPieces} pieces.`;
+  } else if (isPartial) {
+    msg = `Good effort! You correctly placed ${correctPlacements}/${totalPieces} pieces.`;
+  } else {
+    msg = `You placed ${correctPlacements}/${totalPieces} pieces correctly. Review the AO classifications above.`;
+  }
+
+  showFeedback(isCorrect, msg, earned, q.marks, isPartial);
+  showNextButton();
+}
+
+// ============================================
+// TOUCH DRAG SUPPORT
+// ============================================
+function initTouchDrag() {
+  document.querySelectorAll('.puzzle-piece[draggable="true"]').forEach(piece => {
+    piece.addEventListener('touchstart', touchStart, {passive: false});
+  });
+}
+
+let touchDragEl = null;
+let touchClone = null;
+
+function touchStart(e) {
+  e.preventDefault();
+  touchDragEl = e.target.closest('.puzzle-piece');
+  if (!touchDragEl) return;
+
+  touchClone = touchDragEl.cloneNode(true);
+  touchClone.style.position = 'fixed';
+  touchClone.style.pointerEvents = 'none';
+  touchClone.style.opacity = '0.8';
+  touchClone.style.zIndex = '1000';
+  touchClone.style.width = touchDragEl.offsetWidth + 'px';
+  document.body.appendChild(touchClone);
+
+  const touch = e.touches[0];
+  touchClone.style.left = (touch.clientX - 20) + 'px';
+  touchClone.style.top = (touch.clientY - 20) + 'px';
+
+  document.addEventListener('touchmove', touchMove, {passive: false});
+  document.addEventListener('touchend', touchEnd, {passive: false});
+}
+
+function touchMove(e) {
+  e.preventDefault();
+  if (!touchClone) return;
+  const touch = e.touches[0];
+  touchClone.style.left = (touch.clientX - 20) + 'px';
+  touchClone.style.top = (touch.clientY - 20) + 'px';
+}
+
+function touchEnd(e) {
+  if (!touchDragEl || !touchClone) return;
+  document.removeEventListener('touchmove', touchMove);
+  document.removeEventListener('touchend', touchEnd);
+
+  const touch = e.changedTouches[0];
+  touchClone.remove();
+  touchClone = null;
+
+  const dropTarget = document.elementFromPoint(touch.clientX, touch.clientY);
+  if (!dropTarget) return;
+
+  const zone = dropTarget.closest('.puzzle-zone');
+  const bank = dropTarget.closest('.puzzle-pieces-bank');
+  const idx = parseInt(touchDragEl.dataset.idx);
+
+  if (zone && zone.dataset.ao) {
+    removePieceFromAll(idx);
+    state.puzzleState.zones[zone.dataset.ao].push(idx);
+    renderPuzzleState();
+  } else if (bank) {
+    removePieceFromAll(idx);
+    state.puzzleState.bank.push(idx);
+    renderPuzzleState();
+  }
+
+  touchDragEl = null;
+}
+
+// ============================================
+// FEEDBACK & NAVIGATION
+// ============================================
+function showFeedback(correct, msg, earned, total, partial) {
+  const type = correct ? 'correct' : (partial ? 'partial' : 'incorrect');
+  const prefix = correct ? 'Correct!' : (partial ? 'Partial Credit' : 'Incorrect');
+  document.getElementById('feedbackBox').innerHTML = `
+    <div class="feedback ${type} fade-in">
+      <strong>${prefix}</strong> ${earned !== undefined ? `(${earned}/${total} marks)` : ''}<br>
+      <span class="feedback-answer">${msg}</span>
+    </div>
+  `;
+}
+
+function showNextButton() {
+  const isLast = state.currentIndex >= state.questions.length - 1;
+  document.getElementById('actionButtons').innerHTML = `
+    <button class="btn-primary" onclick="${isLast ? 'finishGame()' : 'nextQuestion()'}">${isLast ? 'See Results' : 'Next'}</button>
+  `;
+}
+
+function nextQuestion() {
+  state.currentIndex++;
+  renderQuestion();
+}
+
+function finishGame() {
+  document.getElementById('progressFill').style.width = '100%';
+  const elapsed = Date.now() - state.startTime;
+  const pct = Math.round((state.score / state.maxScore) * 100);
+  const mins = Math.floor(elapsed / 60000);
+  const secs = Math.floor((elapsed % 60000) / 1000);
+
+  document.getElementById('finalScore').textContent = `${pct}%`;
+  document.getElementById('finalLabel').textContent = `${state.score} / ${state.maxScore} marks`;
+  document.getElementById('finalGrade').textContent = getGrade(pct);
+  document.getElementById('statCorrect').textContent = `${state.score}/${state.maxScore}`;
+  document.getElementById('statStreak').textContent = state.bestStreak;
+  document.getElementById('statTime').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+
+  showScreen('results');
+
+  // Prompt for name
+  setTimeout(() => {
+    document.getElementById('nameModal').classList.add('active');
+    document.getElementById('playerNameInput').focus();
+  }, 500);
+}
+
+function getGrade(pct) {
+  if (pct >= 90) return 'A*';
+  if (pct >= 80) return 'A';
+  if (pct >= 70) return 'B';
+  if (pct >= 60) return 'C';
+  if (pct >= 50) return 'D';
+  if (pct >= 40) return 'E';
+  return 'U';
+}
+
+function submitName() {
+  const name = document.getElementById('playerNameInput').value.trim() || 'Anonymous';
+  document.getElementById('nameModal').classList.remove('active');
+  document.getElementById('playerNameInput').value = '';
+
+  const elapsed = Date.now() - state.startTime;
+  const pct = Math.round((state.score / state.maxScore) * 100);
+
+  const entry = {
+    name,
+    score: state.score,
+    maxScore: state.maxScore,
+    pct,
+    mode: state.mode,
+    streak: state.bestStreak,
+    time: elapsed,
+    date: new Date().toISOString()
+  };
+
+  saveToLeaderboard(entry);
+}
+
+// Handle Enter key in name input
+document.getElementById('playerNameInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') submitName();
+});
+
+// ============================================
+// STREAK & TIMER
+// ============================================
+function updateStreak() {
+  const el = document.getElementById('streakDisplay');
+  if (state.streak >= 3) {
+    el.innerHTML = `<span class="streak-fire">&#128293;</span>${state.streak}`;
+  } else {
+    el.textContent = '';
+  }
+}
+
+function updateTimer() {
+  const el = document.getElementById('timerDisplay');
+  const update = () => {
+    if (!document.getElementById('quiz').classList.contains('active')) return;
+    const elapsed = Date.now() - state.startTime;
+    const mins = Math.floor(elapsed / 60000);
+    const secs = Math.floor((elapsed % 60000) / 1000);
+    el.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+    requestAnimationFrame(update);
+  };
+  update();
+}
+
+// ============================================
+// LEADERBOARD
+// ============================================
+function getLeaderboard() {
+  try {
+    return JSON.parse(localStorage.getItem('psych_leaderboard') || '[]');
+  } catch { return []; }
+}
+
+function saveToLeaderboard(entry) {
+  const lb = getLeaderboard();
+  lb.push(entry);
+  lb.sort((a, b) => b.pct - a.pct || a.time - b.time);
+  // Keep top 100
+  localStorage.setItem('psych_leaderboard', JSON.stringify(lb.slice(0, 100)));
+}
+
+let currentLBFilter = 'all';
+
+function filterLeaderboard(mode, btn) {
+  currentLBFilter = mode;
+  document.querySelectorAll('.lb-tab').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderLeaderboard();
+}
+
+function renderLeaderboard() {
+  let lb = getLeaderboard();
+  if (currentLBFilter !== 'all') {
+    lb = lb.filter(e => e.mode === currentLBFilter);
+  }
+
+  const container = document.getElementById('leaderboardContent');
+  if (lb.length === 0) {
+    container.innerHTML = '<div class="lb-empty">No scores yet. Play a quiz to get started!</div>';
+    return;
+  }
+
+  const modeColors = {10:'#dcfce7',50:'#fef3c7',100:'#fce7f3'};
+  const modeLabels = {10:'Easy',50:'Medium',100:'Hero'};
+
+  container.innerHTML = `
+    <table class="lb-table">
+      <thead><tr><th>#</th><th>Name</th><th>Score</th><th>Mode</th><th>Streak</th><th>Time</th></tr></thead>
+      <tbody>
+        ${lb.slice(0, 20).map((e, i) => {
+          const mins = Math.floor(e.time / 60000);
+          const secs = Math.floor((e.time % 60000) / 1000);
+          return `<tr>
+            <td class="lb-rank">${i + 1}</td>
+            <td>${escHTML(e.name)}</td>
+            <td><strong>${e.pct}%</strong> <span style="color:var(--muted);font-size:0.8rem">(${e.score}/${e.maxScore})</span></td>
+            <td><span class="lb-mode" style="background:${modeColors[e.mode]}">${modeLabels[e.mode]}</span></td>
+            <td>${e.streak}</td>
+            <td>${mins}:${secs.toString().padStart(2, '0')}</td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+function clearLeaderboard() {
+  if (confirm('Clear all leaderboard data?')) {
+    localStorage.removeItem('psych_leaderboard');
+    renderLeaderboard();
+  }
+}
+
+// ============================================
+// UTILITIES
+// ============================================
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function escHTML(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// Close modal on outside click
+document.getElementById('nameModal').addEventListener('click', e => {
+  if (e.target === e.currentTarget) submitName();
+});
+
+// Set fullscreen link to current page URL
+document.getElementById('fullscreenLink').href = window.location.href;
+</script>
+
+</body>
+</html>
