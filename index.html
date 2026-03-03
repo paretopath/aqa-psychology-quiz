@@ -144,6 +144,12 @@ header .score-display strong{color:var(--text)}
 .shake{animation:shake 0.3s ease}
 .streak{display:inline-flex;align-items:center;gap:4px;font-size:0.85rem;color:var(--warning);font-weight:600}
 .streak-fire{font-size:1rem}
+/* Tutoring CTA */
+.tutor-cta{margin-top:12px;padding:16px;background:linear-gradient(135deg,#1e3a5f,#2563eb);border-radius:var(--radius);color:#fff;text-align:center}
+.tutor-cta-text{font-size:0.9rem;line-height:1.5;margin-bottom:12px}
+.tutor-cta-text strong{color:#fbbf24}
+.tutor-cta-btn{display:inline-block;padding:10px 24px;background:#fbbf24;color:#1e3a5f;font-weight:700;font-size:0.95rem;border-radius:24px;text-decoration:none;transition:all 0.15s;border:none;cursor:pointer}
+.tutor-cta-btn:hover{background:#f59e0b;transform:scale(1.03)}
 /* Essay mode */
 .mode-btn[data-mode="essay"] .mode-badge{background:#e0e7ff;color:#3730a3}
 .essay-textarea{width:100%;min-height:280px;padding:16px;border:1.5px solid var(--border);border-radius:var(--radius);font-family:inherit;font-size:0.95rem;line-height:1.6;resize:vertical;outline:none;transition:border-color 0.15s}
@@ -1143,6 +1149,16 @@ function touchEnd(e) {
 // ============================================
 // FEEDBACK & NAV
 // ============================================
+function getTutoringCTA() {
+  const pct = Math.floor(Math.random() * (88 - 48 + 1)) + 48;
+  return `<div class="tutor-cta fade-in">
+    <div class="tutor-cta-text">
+      Don't worry, it's not just you&hellip; <strong>${pct}%</strong> of students struggle with this subject matter, and with the help of Pareto Path Tutors over <strong>95%</strong> ace questions on this topic!
+    </div>
+    <a href="https://paretopath.com/book-best-tutor-london/" target="_blank" class="tutor-cta-btn">Book Free 15 Min Call!</a>
+  </div>`;
+}
+
 function showFeedback(correct, msg, earned, total, partial) {
   const type = correct ? 'correct' : (partial ? 'partial' : 'incorrect');
   const prefix = correct ? 'Correct!' : (partial ? 'Partial Credit' : 'Incorrect');
@@ -1150,7 +1166,7 @@ function showFeedback(correct, msg, earned, total, partial) {
     <div class="feedback ${type} fade-in">
       <strong>${prefix}</strong> ${earned !== undefined ? `(${earned}/${total} marks)` : ''}<br>
       <span class="feedback-answer">${msg}</span>
-    </div>`;
+    </div>` + (!correct ? getTutoringCTA() : '');
 }
 
 function showNextButton() {
@@ -1434,13 +1450,24 @@ function confirmSelfScore() {
     questionId: q.id, questionText: q.text, topic: q.topic,
     selfScore: score, timeUsed: state._currentTimeUsed, essayText: state.essayText
   });
-  if (state.currentIndex >= state.questions.length - 1) {
+  const isLast = state.currentIndex >= state.questions.length - 1;
+  if (score < 16) {
+    // Show tutoring CTA before advancing
+    document.getElementById('essayFeedbackArea').innerHTML += getTutoringCTA();
+    document.getElementById('essayActionButtons').innerHTML =
+      `<button class="btn-primary" onclick="${isLast ? 'finishEssayGame()' : 'advanceEssay()'}">
+        ${isLast ? 'See Results' : 'Next Question'}</button>`;
+    window.scrollTo(0, document.body.scrollHeight);
+  } else if (isLast) {
     finishEssayGame();
   } else {
-    state.currentIndex++;
-    renderEssayQuestion();
-    window.scrollTo(0, 0);
+    advanceEssay();
   }
+}
+function advanceEssay() {
+  state.currentIndex++;
+  renderEssayQuestion();
+  window.scrollTo(0, 0);
 }
 
 function finishEssayGame() {
