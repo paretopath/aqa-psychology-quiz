@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AQA Psychology A-Level Quiz</title>
+<title>A-Level Psychology Preparation</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#fff;--card:#fff;--text:#111;--muted:#666;--border:#e0e0e0;--accent:#2563eb;--accent-hover:#1d4ed8;--success:#16a34a;--error:#dc2626;--warning:#f59e0b;--ao1:#3b82f6;--ao2:#8b5cf6;--ao3:#ec4899;--radius:8px}
@@ -132,6 +132,19 @@ header .score-display strong{color:var(--text)}
 .keypoint-item.correct .keypoint-check{background:var(--success);border-color:var(--success);color:#fff}
 .keypoint-item.incorrect .keypoint-check{background:var(--error);border-color:var(--error);color:#fff}
 .keypoint-item.missed .keypoint-check{background:var(--warning);border-color:var(--warning);color:#fff}
+/* Board selection */
+.board-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+.board-btn{padding:24px 16px;border:2px solid var(--border);border-radius:var(--radius);background:var(--card);text-align:center;transition:all 0.15s}
+.board-btn:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,0.1)}
+.board-btn.selected{border-color:var(--accent);background:var(--accent);color:#fff}
+.board-name{font-size:1.1rem;font-weight:700}
+.board-desc{font-size:0.8rem;color:var(--muted);margin-top:4px}
+.board-btn.selected .board-desc{color:rgba(255,255,255,0.8)}
+.board-badge{display:inline-block;margin-top:8px;padding:3px 10px;border-radius:12px;font-size:0.75rem;font-weight:600}
+.board-badge.aqa{background:#ede9fe;color:#5b21b6}
+.board-badge.edexcel{background:#d1fae5;color:#065f46}
+.board-btn.selected .board-badge{background:rgba(255,255,255,0.25);color:#fff}
+.home-board-label{font-size:0.8rem;color:var(--muted);text-align:center;margin-top:-4px;margin-bottom:4px}
 @media(max-width:600px){
   .container{padding:12px}
   #topic-select .topic-grid{grid-template-columns:1fr}
@@ -177,12 +190,40 @@ header .score-display strong{color:var(--text)}
 
 <div class="container">
 
-<!-- HOME SCREEN -->
-<div id="home" class="screen active">
+<!-- BOARD SELECTION SCREEN -->
+<div id="board-select" class="screen active">
   <div class="title-section">
-    <h1>AQA Psychology</h1>
+    <h1>A-Level Psychology</h1>
+    <p>Revision &amp; Exam Preparation</p>
+  </div>
+  <h2 style="text-align:center;margin-top:20px">Choose Your Exam Board</h2>
+  <div class="board-grid">
+    <button class="board-btn" onclick="selectBoard('AQA')">
+      <div class="board-name">AQA</div>
+      <div class="board-desc">Paper 1 &amp; 2 topics</div>
+      <span class="board-badge aqa">A-Level 7182</span>
+    </button>
+    <button class="board-btn" onclick="selectBoard('Edexcel')">
+      <div class="board-name">Edexcel</div>
+      <div class="board-desc">Paper 1, 2 &amp; 3 topics</div>
+      <span class="board-badge edexcel">A-Level 9PS0</span>
+    </button>
+  </div>
+  <div class="nav-links" style="margin-top:12px">
+    <button class="btn-secondary btn-sm" onclick="showScreen('leaderboard')">Leaderboard</button>
+  </div>
+  <div style="text-align:center;margin-top:8px">
+    <a href="" target="_blank" id="fullscreenLink" style="font-size:0.8rem;color:var(--muted);text-decoration:none">Open in new tab &#8599;</a>
+  </div>
+</div>
+
+<!-- HOME SCREEN (MODE SELECT) -->
+<div id="home" class="screen">
+  <div class="title-section">
+    <h1 id="boardTitle">Psychology</h1>
     <p>A-Level Revision Quiz</p>
   </div>
+  <div class="home-board-label" id="homeBoardLabel"></div>
   <div class="mode-grid">
     <button class="mode-btn" data-mode="10" onclick="selectMode(10)">
       <div class="mode-title">Quick Quiz</div>
@@ -206,10 +247,8 @@ header .score-display strong{color:var(--text)}
     </button>
   </div>
   <div class="nav-links">
+    <button class="btn-secondary btn-sm" onclick="showScreen('board-select')">Change Board</button>
     <button class="btn-secondary btn-sm" onclick="showScreen('leaderboard')">Leaderboard</button>
-  </div>
-  <div style="text-align:center;margin-top:8px">
-    <a href="" target="_blank" id="fullscreenLink" style="font-size:0.8rem;color:var(--muted);text-decoration:none">Open in new tab &#8599;</a>
   </div>
 </div>
 
@@ -290,7 +329,7 @@ header .score-display strong{color:var(--text)}
   </div>
   <div id="essayBreakdown" style="margin-top:16px"></div>
   <div class="results-actions">
-    <button class="btn-primary" onclick="showScreen('home')">Play Again</button>
+    <button class="btn-primary" onclick="showScreen('board-select')">Play Again</button>
     <button class="btn-secondary" onclick="showScreen('leaderboard')">Leaderboard</button>
   </div>
 </div>
@@ -308,7 +347,7 @@ header .score-display strong{color:var(--text)}
     <div class="stat-card"><div class="stat-value" id="statTime">0:00</div><div class="stat-label">Time</div></div>
   </div>
   <div class="results-actions">
-    <button class="btn-primary" onclick="showScreen('home')">Play Again</button>
+    <button class="btn-primary" onclick="showScreen('board-select')">Play Again</button>
     <button class="btn-secondary" onclick="showScreen('leaderboard')">Leaderboard</button>
   </div>
 </div>
@@ -317,7 +356,12 @@ header .score-display strong{color:var(--text)}
 <div id="leaderboard" class="screen">
   <div style="display:flex;justify-content:space-between;align-items:center">
     <h2>Leaderboard</h2>
-    <button class="btn-secondary btn-sm" onclick="showScreen('home')">Back</button>
+    <button class="btn-secondary btn-sm" onclick="showScreen('board-select')">Back</button>
+  </div>
+  <div class="lb-tabs" id="lbBoardTabs">
+    <button class="lb-tab active" onclick="filterLBBoard('all',this)">All</button>
+    <button class="lb-tab" onclick="filterLBBoard('AQA',this)">AQA</button>
+    <button class="lb-tab" onclick="filterLBBoard('Edexcel',this)">Edexcel</button>
   </div>
   <div class="lb-tabs">
     <button class="lb-tab active" onclick="filterLeaderboard('all',this)">All</button>
@@ -350,146 +394,146 @@ header .score-display strong{color:var(--text)}
 const QUESTIONS = [
 // ========== MCQ (1 mark) ==========
 // -- Social Influence --
-{id:"si1",topic:"Social Influence",type:"mcq",marks:1,text:"In Asch's line experiment, what was the conformity rate on critical trials?",options:["12.5%","36.8%","50%","75%"],correct:1,explanation:"Asch found a conformity rate of approximately 36.8% across critical trials."},
-{id:"si2",topic:"Social Influence",type:"mcq",marks:1,text:"In Milgram's original obedience study, what percentage of participants administered the maximum 450V shock?",options:["35%","50%","65%","80%"],correct:2,explanation:"65% of participants went to the maximum 450 volts in Milgram's original study."},
-{id:"si3",topic:"Social Influence",type:"mcq",marks:1,text:"Which type of conformity involves publicly agreeing but privately disagreeing?",options:["Internalisation","Identification","Compliance","Obedience"],correct:2,explanation:"Compliance involves publicly conforming but privately maintaining your own views."},
-{id:"si4",topic:"Social Influence",type:"mcq",marks:1,text:"What is the term for consistency of a minority's message over time?",options:["Synchronic consistency","Diachronic consistency","Flexibility","Commitment"],correct:1,explanation:"Diachronic consistency refers to maintaining the same message over time."},
-{id:"si5",topic:"Social Influence",type:"mcq",marks:1,text:"In Moscovici's blue slide study, what percentage of majority participants called a blue slide green when the minority was consistent?",options:["2%","8%","15%","32%"],correct:1,explanation:"8.42% of responses identified a blue slide as green when exposed to a consistent minority."},
-{id:"si6",topic:"Social Influence",type:"mcq",marks:1,text:"Which explanation of obedience proposes that people act as agents carrying out another person's wishes?",options:["Authoritarian personality","Legitimacy of authority","Agentic state","Social identity theory"],correct:2,explanation:"The agentic state theory proposes people shift from an autonomous state to acting as agents of an authority figure."},
-{id:"si7",topic:"Social Influence",type:"mcq",marks:1,text:"Normative social influence is based on the desire to:",options:["Be correct","Gain information","Fit in and be accepted","Obey authority"],correct:2,explanation:"Normative social influence is driven by the desire to be liked and accepted by the group."},
-{id:"si8",topic:"Social Influence",type:"mcq",marks:1,text:"Informational social influence is most likely to lead to which type of conformity?",options:["Compliance","Identification","Internalisation","Obedience"],correct:2,explanation:"ISI occurs when we look to others for guidance, leading to genuine change in beliefs (internalisation)."},
-{id:"si9",topic:"Social Influence",type:"mcq",marks:1,text:"Which of these is NOT a factor that increased obedience in Milgram's variations?",options:["Proximity of authority","Prestigious location","Presence of allies","Wearing a uniform"],correct:2,explanation:"The presence of allies (social support) decreased obedience. When a confederate refused, obedience dropped to 10%."},
-{id:"si10",topic:"Social Influence",type:"mcq",marks:1,text:"Which two best describe Zimbardo's prison study? (Select the single best pair)",options:["Lab experiment & covert observation","Controlled observation & participant observation","Natural experiment & case study","Field experiment & self-report"],correct:1,explanation:"Zimbardo's SPE was a controlled observation (standardised setup) and participant observation (Zimbardo acted as superintendent)."},
+{id:"si1",board:"AQA",topic:"Social Influence",type:"mcq",marks:1,text:"In Asch's line experiment, what was the conformity rate on critical trials?",options:["12.5%","36.8%","50%","75%"],correct:1,explanation:"Asch found a conformity rate of approximately 36.8% across critical trials."},
+{id:"si2",board:"AQA",topic:"Social Influence",type:"mcq",marks:1,text:"In Milgram's original obedience study, what percentage of participants administered the maximum 450V shock?",options:["35%","50%","65%","80%"],correct:2,explanation:"65% of participants went to the maximum 450 volts in Milgram's original study."},
+{id:"si3",board:"AQA",topic:"Social Influence",type:"mcq",marks:1,text:"Which type of conformity involves publicly agreeing but privately disagreeing?",options:["Internalisation","Identification","Compliance","Obedience"],correct:2,explanation:"Compliance involves publicly conforming but privately maintaining your own views."},
+{id:"si4",board:"AQA",topic:"Social Influence",type:"mcq",marks:1,text:"What is the term for consistency of a minority's message over time?",options:["Synchronic consistency","Diachronic consistency","Flexibility","Commitment"],correct:1,explanation:"Diachronic consistency refers to maintaining the same message over time."},
+{id:"si5",board:"AQA",topic:"Social Influence",type:"mcq",marks:1,text:"In Moscovici's blue slide study, what percentage of majority participants called a blue slide green when the minority was consistent?",options:["2%","8%","15%","32%"],correct:1,explanation:"8.42% of responses identified a blue slide as green when exposed to a consistent minority."},
+{id:"si6",board:"AQA",topic:"Social Influence",type:"mcq",marks:1,text:"Which explanation of obedience proposes that people act as agents carrying out another person's wishes?",options:["Authoritarian personality","Legitimacy of authority","Agentic state","Social identity theory"],correct:2,explanation:"The agentic state theory proposes people shift from an autonomous state to acting as agents of an authority figure."},
+{id:"si7",board:"AQA",topic:"Social Influence",type:"mcq",marks:1,text:"Normative social influence is based on the desire to:",options:["Be correct","Gain information","Fit in and be accepted","Obey authority"],correct:2,explanation:"Normative social influence is driven by the desire to be liked and accepted by the group."},
+{id:"si8",board:"AQA",topic:"Social Influence",type:"mcq",marks:1,text:"Informational social influence is most likely to lead to which type of conformity?",options:["Compliance","Identification","Internalisation","Obedience"],correct:2,explanation:"ISI occurs when we look to others for guidance, leading to genuine change in beliefs (internalisation)."},
+{id:"si9",board:"AQA",topic:"Social Influence",type:"mcq",marks:1,text:"Which of these is NOT a factor that increased obedience in Milgram's variations?",options:["Proximity of authority","Prestigious location","Presence of allies","Wearing a uniform"],correct:2,explanation:"The presence of allies (social support) decreased obedience. When a confederate refused, obedience dropped to 10%."},
+{id:"si10",board:"AQA",topic:"Social Influence",type:"mcq",marks:1,text:"Which two best describe Zimbardo's prison study? (Select the single best pair)",options:["Lab experiment & covert observation","Controlled observation & participant observation","Natural experiment & case study","Field experiment & self-report"],correct:1,explanation:"Zimbardo's SPE was a controlled observation (standardised setup) and participant observation (Zimbardo acted as superintendent)."},
 // -- Memory --
-{id:"me1",topic:"Memory",type:"mcq",marks:1,text:"What is the capacity of short-term memory according to Miller?",options:["5 plus or minus 2","7 plus or minus 2","9 plus or minus 2","Unlimited"],correct:1,explanation:"Miller proposed the 'magic number 7 plus or minus 2' for STM capacity."},
-{id:"me2",topic:"Memory",type:"mcq",marks:1,text:"Which component of the working memory model acts as the 'boss' directing attention?",options:["Phonological loop","Visuo-spatial sketchpad","Central executive","Episodic buffer"],correct:2,explanation:"The central executive directs attention and allocates resources to the slave systems."},
-{id:"me3",topic:"Memory",type:"mcq",marks:1,text:"Episodic memories differ from semantic memories because they are:",options:["Memories of facts and general knowledge","Time-stamped autobiographical events","Procedural skills","Always accurate"],correct:1,explanation:"Episodic memories are personal, time-stamped autobiographical events."},
-{id:"me4",topic:"Memory",type:"mcq",marks:1,text:"The encoding specificity principle is associated with which explanation of forgetting?",options:["Proactive interference","Retroactive interference","Retrieval failure","Decay theory"],correct:2,explanation:"Tulving's encoding specificity principle underpins retrieval failure."},
-{id:"me5",topic:"Memory",type:"mcq",marks:1,text:"Loftus and Palmer's study of car accident estimates demonstrates:",options:["Proactive interference","The misinformation effect from leading questions","Retrieval failure","Multi-store model validity"],correct:1,explanation:"Loftus and Palmer showed the verb used in a leading question affected speed estimates and false memories."},
-{id:"me6",topic:"Memory",type:"mcq",marks:1,text:"Which two components make up the phonological loop?",options:["Inner eye and inner voice","Phonological store and articulatory process","Central executive and episodic buffer","Visual cache and inner scribe"],correct:1,explanation:"The phonological loop consists of the phonological store ('inner ear') and articulatory process ('inner voice')."},
-{id:"me7",topic:"Memory",type:"mcq",marks:1,text:"Proactive interference occurs when:",options:["New learning disrupts old memories","Old learning disrupts new memories","Cues are absent at retrieval","Memories decay over time"],correct:1,explanation:"Proactive interference is when previously learned material interferes with recall of newer information."},
-{id:"me8",topic:"Memory",type:"mcq",marks:1,text:"The multi-store model was proposed by:",options:["Baddeley and Hitch","Atkinson and Shiffrin","Tulving","Bartlett"],correct:1,explanation:"Atkinson and Shiffrin (1968) proposed the multi-store model with sensory register, STM, and LTM."},
+{id:"me1",board:"AQA",topic:"Memory",type:"mcq",marks:1,text:"What is the capacity of short-term memory according to Miller?",options:["5 plus or minus 2","7 plus or minus 2","9 plus or minus 2","Unlimited"],correct:1,explanation:"Miller proposed the 'magic number 7 plus or minus 2' for STM capacity."},
+{id:"me2",board:"AQA",topic:"Memory",type:"mcq",marks:1,text:"Which component of the working memory model acts as the 'boss' directing attention?",options:["Phonological loop","Visuo-spatial sketchpad","Central executive","Episodic buffer"],correct:2,explanation:"The central executive directs attention and allocates resources to the slave systems."},
+{id:"me3",board:"AQA",topic:"Memory",type:"mcq",marks:1,text:"Episodic memories differ from semantic memories because they are:",options:["Memories of facts and general knowledge","Time-stamped autobiographical events","Procedural skills","Always accurate"],correct:1,explanation:"Episodic memories are personal, time-stamped autobiographical events."},
+{id:"me4",board:"AQA",topic:"Memory",type:"mcq",marks:1,text:"The encoding specificity principle is associated with which explanation of forgetting?",options:["Proactive interference","Retroactive interference","Retrieval failure","Decay theory"],correct:2,explanation:"Tulving's encoding specificity principle underpins retrieval failure."},
+{id:"me5",board:"AQA",topic:"Memory",type:"mcq",marks:1,text:"Loftus and Palmer's study of car accident estimates demonstrates:",options:["Proactive interference","The misinformation effect from leading questions","Retrieval failure","Multi-store model validity"],correct:1,explanation:"Loftus and Palmer showed the verb used in a leading question affected speed estimates and false memories."},
+{id:"me6",board:"AQA",topic:"Memory",type:"mcq",marks:1,text:"Which two components make up the phonological loop?",options:["Inner eye and inner voice","Phonological store and articulatory process","Central executive and episodic buffer","Visual cache and inner scribe"],correct:1,explanation:"The phonological loop consists of the phonological store ('inner ear') and articulatory process ('inner voice')."},
+{id:"me7",board:"AQA",topic:"Memory",type:"mcq",marks:1,text:"Proactive interference occurs when:",options:["New learning disrupts old memories","Old learning disrupts new memories","Cues are absent at retrieval","Memories decay over time"],correct:1,explanation:"Proactive interference is when previously learned material interferes with recall of newer information."},
+{id:"me8",board:"AQA",topic:"Memory",type:"mcq",marks:1,text:"The multi-store model was proposed by:",options:["Baddeley and Hitch","Atkinson and Shiffrin","Tulving","Bartlett"],correct:1,explanation:"Atkinson and Shiffrin (1968) proposed the multi-store model with sensory register, STM, and LTM."},
 // -- Attachment --
-{id:"at1",topic:"Attachment",type:"mcq",marks:1,text:"Which feature of caregiver-infant interaction involves the baby and caregiver taking turns?",options:["Interactional synchrony","Reciprocity","Attachment","Bonding"],correct:1,explanation:"Reciprocity is the turn-taking interaction between infant and caregiver."},
-{id:"at2",topic:"Attachment",type:"mcq",marks:1,text:"When a caregiver and infant move in coordination, this is called:",options:["Reciprocity","Interactional synchrony","Imprinting","Monotropy"],correct:1,explanation:"Interactional synchrony is when caregiver and infant mirror each other's actions simultaneously."},
-{id:"at3",topic:"Attachment",type:"mcq",marks:1,text:"According to Bowlby, the critical period for attachment formation is approximately:",options:["The first 6 months","The first 2.5 years","The first 5 years","The first 7 years"],correct:1,explanation:"Bowlby proposed a critical period of roughly the first 2.5-3 years."},
-{id:"at4",topic:"Attachment",type:"mcq",marks:1,text:"In Ainsworth's Strange Situation, Type B attachment is characterised as:",options:["Insecure-avoidant","Secure","Insecure-resistant","Disorganised"],correct:1,explanation:"Type B is secure attachment: uses caregiver as safe base, distressed on separation, comforted on reunion."},
-{id:"at5",topic:"Attachment",type:"mcq",marks:1,text:"Lorenz demonstrated imprinting using which animals?",options:["Dogs","Rhesus monkeys","Greylag geese","Rats"],correct:2,explanation:"Lorenz used greylag geese to demonstrate imprinting."},
-{id:"at6",topic:"Attachment",type:"mcq",marks:1,text:"Harlow's research showed infant monkeys preferred:",options:["The wire mother with food","The cloth mother for comfort","Isolation over either","Neither surrogate"],correct:1,explanation:"Harlow showed monkeys preferred the cloth mother for contact comfort over the wire mother with food."},
-{id:"at7",topic:"Attachment",type:"mcq",marks:1,text:"Which attachment type shows high separation anxiety but resists comfort on reunion?",options:["Type A: Insecure-avoidant","Type B: Secure","Type C: Insecure-resistant","Type D: Disorganised"],correct:2,explanation:"Type C children show intense distress but resist comfort and are ambivalent on reunion."},
-{id:"at8",topic:"Attachment",type:"mcq",marks:1,text:"According to learning theory, before attachment, milk is best described as:",options:["A conditioned stimulus","An unconditioned stimulus","A neutral stimulus","A conditioned response"],correct:1,explanation:"Milk naturally produces pleasure (UCR), making it an unconditioned stimulus before any learning."},
+{id:"at1",board:"AQA",topic:"Attachment",type:"mcq",marks:1,text:"Which feature of caregiver-infant interaction involves the baby and caregiver taking turns?",options:["Interactional synchrony","Reciprocity","Attachment","Bonding"],correct:1,explanation:"Reciprocity is the turn-taking interaction between infant and caregiver."},
+{id:"at2",board:"AQA",topic:"Attachment",type:"mcq",marks:1,text:"When a caregiver and infant move in coordination, this is called:",options:["Reciprocity","Interactional synchrony","Imprinting","Monotropy"],correct:1,explanation:"Interactional synchrony is when caregiver and infant mirror each other's actions simultaneously."},
+{id:"at3",board:"AQA",topic:"Attachment",type:"mcq",marks:1,text:"According to Bowlby, the critical period for attachment formation is approximately:",options:["The first 6 months","The first 2.5 years","The first 5 years","The first 7 years"],correct:1,explanation:"Bowlby proposed a critical period of roughly the first 2.5-3 years."},
+{id:"at4",board:"AQA",topic:"Attachment",type:"mcq",marks:1,text:"In Ainsworth's Strange Situation, Type B attachment is characterised as:",options:["Insecure-avoidant","Secure","Insecure-resistant","Disorganised"],correct:1,explanation:"Type B is secure attachment: uses caregiver as safe base, distressed on separation, comforted on reunion."},
+{id:"at5",board:"AQA",topic:"Attachment",type:"mcq",marks:1,text:"Lorenz demonstrated imprinting using which animals?",options:["Dogs","Rhesus monkeys","Greylag geese","Rats"],correct:2,explanation:"Lorenz used greylag geese to demonstrate imprinting."},
+{id:"at6",board:"AQA",topic:"Attachment",type:"mcq",marks:1,text:"Harlow's research showed infant monkeys preferred:",options:["The wire mother with food","The cloth mother for comfort","Isolation over either","Neither surrogate"],correct:1,explanation:"Harlow showed monkeys preferred the cloth mother for contact comfort over the wire mother with food."},
+{id:"at7",board:"AQA",topic:"Attachment",type:"mcq",marks:1,text:"Which attachment type shows high separation anxiety but resists comfort on reunion?",options:["Type A: Insecure-avoidant","Type B: Secure","Type C: Insecure-resistant","Type D: Disorganised"],correct:2,explanation:"Type C children show intense distress but resist comfort and are ambivalent on reunion."},
+{id:"at8",board:"AQA",topic:"Attachment",type:"mcq",marks:1,text:"According to learning theory, before attachment, milk is best described as:",options:["A conditioned stimulus","An unconditioned stimulus","A neutral stimulus","A conditioned response"],correct:1,explanation:"Milk naturally produces pleasure (UCR), making it an unconditioned stimulus before any learning."},
 // -- Psychopathology --
-{id:"pp1",topic:"Psychopathology",type:"mcq",marks:1,text:"In the two-process model, phobias are acquired through:",options:["Operant conditioning","Social learning","Classical conditioning","Cognitive schemas"],correct:2,explanation:"In Mowrer's two-process model, phobias are acquired through classical conditioning."},
-{id:"pp2",topic:"Psychopathology",type:"mcq",marks:1,text:"Beck's cognitive triad involves negative views about:",options:["Past, present, and future","Self, world, and future","Family, work, and health","Thoughts, feelings, and behaviour"],correct:1,explanation:"Beck's negative triad: negative views about the self, the world, and the future."},
-{id:"pp3",topic:"Psychopathology",type:"mcq",marks:1,text:"Ellis's ABC model: A stands for:",options:["Antecedent","Activating event","Anxiety","Assessment"],correct:1,explanation:"A = Activating event, B = Belief, C = Consequence."},
-{id:"pp4",topic:"Psychopathology",type:"mcq",marks:1,text:"SSRIs work by:",options:["Increasing dopamine","Blocking serotonin reuptake","Reducing noradrenaline","Increasing GABA"],correct:1,explanation:"SSRIs block reuptake of serotonin, increasing its availability at the synapse."},
-{id:"pp5",topic:"Psychopathology",type:"mcq",marks:1,text:"Which definition of abnormality focuses on inability to cope with everyday living?",options:["Statistical infrequency","Deviation from social norms","Failure to function adequately","Deviation from ideal mental health"],correct:2,explanation:"Failure to function adequately defines abnormality by whether someone can cope with everyday demands."},
-{id:"pp6",topic:"Psychopathology",type:"mcq",marks:1,text:"Which two are emotional characteristics of OCD?",options:["Hypervigilance and obsessive thoughts","Low mood and self-loathing","Compulsions and rituals","Avoidance and withdrawal"],correct:1,explanation:"Emotional characteristics of OCD include low mood and self-loathing."},
+{id:"pp1",board:"AQA",topic:"Psychopathology",type:"mcq",marks:1,text:"In the two-process model, phobias are acquired through:",options:["Operant conditioning","Social learning","Classical conditioning","Cognitive schemas"],correct:2,explanation:"In Mowrer's two-process model, phobias are acquired through classical conditioning."},
+{id:"pp2",board:"AQA",topic:"Psychopathology",type:"mcq",marks:1,text:"Beck's cognitive triad involves negative views about:",options:["Past, present, and future","Self, world, and future","Family, work, and health","Thoughts, feelings, and behaviour"],correct:1,explanation:"Beck's negative triad: negative views about the self, the world, and the future."},
+{id:"pp3",board:"AQA",topic:"Psychopathology",type:"mcq",marks:1,text:"Ellis's ABC model: A stands for:",options:["Antecedent","Activating event","Anxiety","Assessment"],correct:1,explanation:"A = Activating event, B = Belief, C = Consequence."},
+{id:"pp4",board:"AQA",topic:"Psychopathology",type:"mcq",marks:1,text:"SSRIs work by:",options:["Increasing dopamine","Blocking serotonin reuptake","Reducing noradrenaline","Increasing GABA"],correct:1,explanation:"SSRIs block reuptake of serotonin, increasing its availability at the synapse."},
+{id:"pp5",board:"AQA",topic:"Psychopathology",type:"mcq",marks:1,text:"Which definition of abnormality focuses on inability to cope with everyday living?",options:["Statistical infrequency","Deviation from social norms","Failure to function adequately","Deviation from ideal mental health"],correct:2,explanation:"Failure to function adequately defines abnormality by whether someone can cope with everyday demands."},
+{id:"pp6",board:"AQA",topic:"Psychopathology",type:"mcq",marks:1,text:"Which two are emotional characteristics of OCD?",options:["Hypervigilance and obsessive thoughts","Low mood and self-loathing","Compulsions and rituals","Avoidance and withdrawal"],correct:1,explanation:"Emotional characteristics of OCD include low mood and self-loathing."},
 // -- Approaches --
-{id:"ap1",topic:"Approaches",type:"mcq",marks:1,text:"According to Freud, the ego operates on the:",options:["Pleasure principle","Reality principle","Morality principle","Id principle"],correct:1,explanation:"The ego operates on the reality principle, mediating between id and superego."},
-{id:"ap2",topic:"Approaches",type:"mcq",marks:1,text:"The correct order of psychosexual stages is:",options:["Anal, Oral, Phallic, Latency, Genital","Oral, Anal, Phallic, Latency, Genital","Oral, Phallic, Anal, Genital, Latency","Phallic, Oral, Anal, Latency, Genital"],correct:1,explanation:"Freud's stages: Oral, Anal, Phallic, Latency, Genital."},
-{id:"ap3",topic:"Approaches",type:"mcq",marks:1,text:"In social learning theory, learning by watching a model being reinforced is called:",options:["Direct reinforcement","Vicarious reinforcement","Negative reinforcement","Self-reinforcement"],correct:1,explanation:"Vicarious reinforcement occurs when we observe a model being rewarded."},
-{id:"ap4",topic:"Approaches",type:"mcq",marks:1,text:"Which approach sees humans as information processors, similar to computers?",options:["Biological approach","Behaviourist approach","Cognitive approach","Psychodynamic approach"],correct:2,explanation:"The cognitive approach uses the computer analogy for the mind."},
-{id:"ap5",topic:"Approaches",type:"mcq",marks:1,text:"Maslow's hierarchy places which need at the top?",options:["Safety needs","Love and belonging","Esteem","Self-actualisation"],correct:3,explanation:"Self-actualisation is the highest need - achieving one's full potential."},
-{id:"ap6",topic:"Approaches",type:"mcq",marks:1,text:"The id is part of which level of the mind?",options:["The conscious mind","The preconscious mind","The unconscious mind","The superego"],correct:2,explanation:"The id is entirely unconscious, operating on the pleasure principle."},
+{id:"ap1",board:"AQA",topic:"Approaches",type:"mcq",marks:1,text:"According to Freud, the ego operates on the:",options:["Pleasure principle","Reality principle","Morality principle","Id principle"],correct:1,explanation:"The ego operates on the reality principle, mediating between id and superego."},
+{id:"ap2",board:"AQA",topic:"Approaches",type:"mcq",marks:1,text:"The correct order of psychosexual stages is:",options:["Anal, Oral, Phallic, Latency, Genital","Oral, Anal, Phallic, Latency, Genital","Oral, Phallic, Anal, Genital, Latency","Phallic, Oral, Anal, Latency, Genital"],correct:1,explanation:"Freud's stages: Oral, Anal, Phallic, Latency, Genital."},
+{id:"ap3",board:"AQA",topic:"Approaches",type:"mcq",marks:1,text:"In social learning theory, learning by watching a model being reinforced is called:",options:["Direct reinforcement","Vicarious reinforcement","Negative reinforcement","Self-reinforcement"],correct:1,explanation:"Vicarious reinforcement occurs when we observe a model being rewarded."},
+{id:"ap4",board:"AQA",topic:"Approaches",type:"mcq",marks:1,text:"Which approach sees humans as information processors, similar to computers?",options:["Biological approach","Behaviourist approach","Cognitive approach","Psychodynamic approach"],correct:2,explanation:"The cognitive approach uses the computer analogy for the mind."},
+{id:"ap5",board:"AQA",topic:"Approaches",type:"mcq",marks:1,text:"Maslow's hierarchy places which need at the top?",options:["Safety needs","Love and belonging","Esteem","Self-actualisation"],correct:3,explanation:"Self-actualisation is the highest need - achieving one's full potential."},
+{id:"ap6",board:"AQA",topic:"Approaches",type:"mcq",marks:1,text:"The id is part of which level of the mind?",options:["The conscious mind","The preconscious mind","The unconscious mind","The superego"],correct:2,explanation:"The id is entirely unconscious, operating on the pleasure principle."},
 // -- Biopsychology --
-{id:"bp1",topic:"Biopsychology",type:"mcq",marks:1,text:"The fight or flight response is triggered by the:",options:["Parasympathetic nervous system","Somatic nervous system","Sympathetic nervous system","Central nervous system"],correct:2,explanation:"The sympathetic division activates the fight or flight response."},
-{id:"bp2",topic:"Biopsychology",type:"mcq",marks:1,text:"Which brain structure is the main endogenous pacemaker for the sleep-wake cycle?",options:["Pineal gland","Hypothalamus","Suprachiasmatic nucleus (SCN)","Pituitary gland"],correct:2,explanation:"The SCN acts as the body's master clock, regulating circadian rhythms."},
-{id:"bp3",topic:"Biopsychology",type:"mcq",marks:1,text:"Broca's area is associated with:",options:["Speech comprehension","Speech production","Visual processing","Memory formation"],correct:1,explanation:"Broca's area in the left frontal lobe is responsible for speech production."},
-{id:"bp4",topic:"Biopsychology",type:"mcq",marks:1,text:"Infradian rhythms have a duration of:",options:["Less than 24 hours","Exactly 24 hours","More than 24 hours","Exactly 28 days"],correct:2,explanation:"Infradian rhythms last MORE than 24 hours (e.g. menstrual cycle ~28 days)."},
-{id:"bp5",topic:"Biopsychology",type:"mcq",marks:1,text:"Low serotonin levels have been linked to:",options:["Schizophrenia","OCD and depression","Parkinson's disease","ADHD"],correct:1,explanation:"Low serotonin is implicated in both OCD and depression."},
+{id:"bp1",board:"AQA",topic:"Biopsychology",type:"mcq",marks:1,text:"The fight or flight response is triggered by the:",options:["Parasympathetic nervous system","Somatic nervous system","Sympathetic nervous system","Central nervous system"],correct:2,explanation:"The sympathetic division activates the fight or flight response."},
+{id:"bp2",board:"AQA",topic:"Biopsychology",type:"mcq",marks:1,text:"Which brain structure is the main endogenous pacemaker for the sleep-wake cycle?",options:["Pineal gland","Hypothalamus","Suprachiasmatic nucleus (SCN)","Pituitary gland"],correct:2,explanation:"The SCN acts as the body's master clock, regulating circadian rhythms."},
+{id:"bp3",board:"AQA",topic:"Biopsychology",type:"mcq",marks:1,text:"Broca's area is associated with:",options:["Speech comprehension","Speech production","Visual processing","Memory formation"],correct:1,explanation:"Broca's area in the left frontal lobe is responsible for speech production."},
+{id:"bp4",board:"AQA",topic:"Biopsychology",type:"mcq",marks:1,text:"Infradian rhythms have a duration of:",options:["Less than 24 hours","Exactly 24 hours","More than 24 hours","Exactly 28 days"],correct:2,explanation:"Infradian rhythms last MORE than 24 hours (e.g. menstrual cycle ~28 days)."},
+{id:"bp5",board:"AQA",topic:"Biopsychology",type:"mcq",marks:1,text:"Low serotonin levels have been linked to:",options:["Schizophrenia","OCD and depression","Parkinson's disease","ADHD"],correct:1,explanation:"Low serotonin is implicated in both OCD and depression."},
 // -- Research Methods --
-{id:"rm1",topic:"Research Methods",type:"mcq",marks:1,text:"A Type I error occurs when:",options:["The null hypothesis is wrongly rejected","The alternative hypothesis is wrongly rejected","The sample is too small","Results can't be replicated"],correct:0,explanation:"A Type I error is a false positive: rejecting the null hypothesis when it is true."},
-{id:"rm2",topic:"Research Methods",type:"mcq",marks:1,text:"Data collected first-hand by the researcher is called:",options:["Secondary data","Qualitative data","Primary data","Meta-data"],correct:2,explanation:"Primary data is original data collected directly by the researcher."},
-{id:"rm3",topic:"Research Methods",type:"mcq",marks:1,text:"Pearson's r is appropriate when:",options:["Data is nominal, testing for difference","Data is ordinal, testing for association","Data is interval, testing for correlation","Data is nominal, testing for association"],correct:2,explanation:"Pearson's r tests for correlation with interval/ratio level data."},
-{id:"rm4",topic:"Research Methods",type:"mcq",marks:1,text:"Demand characteristics threaten:",options:["External validity","Internal validity","Ecological validity","Temporal validity"],correct:1,explanation:"Demand characteristics threaten internal validity because participants change their behaviour."},
+{id:"rm1",board:"AQA",topic:"Research Methods",type:"mcq",marks:1,text:"A Type I error occurs when:",options:["The null hypothesis is wrongly rejected","The alternative hypothesis is wrongly rejected","The sample is too small","Results can't be replicated"],correct:0,explanation:"A Type I error is a false positive: rejecting the null hypothesis when it is true."},
+{id:"rm2",board:"AQA",topic:"Research Methods",type:"mcq",marks:1,text:"Data collected first-hand by the researcher is called:",options:["Secondary data","Qualitative data","Primary data","Meta-data"],correct:2,explanation:"Primary data is original data collected directly by the researcher."},
+{id:"rm3",board:"AQA",topic:"Research Methods",type:"mcq",marks:1,text:"Pearson's r is appropriate when:",options:["Data is nominal, testing for difference","Data is ordinal, testing for association","Data is interval, testing for correlation","Data is nominal, testing for association"],correct:2,explanation:"Pearson's r tests for correlation with interval/ratio level data."},
+{id:"rm4",board:"AQA",topic:"Research Methods",type:"mcq",marks:1,text:"Demand characteristics threaten:",options:["External validity","Internal validity","Ecological validity","Temporal validity"],correct:1,explanation:"Demand characteristics threaten internal validity because participants change their behaviour."},
 // -- Issues & Debates --
-{id:"id1",topic:"Issues & Debates",type:"mcq",marks:1,text:"The nomothetic approach aims to:",options:["Study unique individuals in depth","Establish general laws of behaviour","Focus on subjective experience","Reject scientific methods"],correct:1,explanation:"The nomothetic approach seeks general laws applicable to large groups."},
-{id:"id2",topic:"Issues & Debates",type:"mcq",marks:1,text:"Androcentrism in psychology refers to:",options:["Cultural bias","A male-centred view","Exaggerating gender differences","Ignoring biology"],correct:1,explanation:"Androcentrism centres psychology around male experience and applies findings to women."},
-{id:"id3",topic:"Issues & Debates",type:"mcq",marks:1,text:"Which term best represents the view that biology and environment work together?",options:["Determinism","Ethnocentrism","Holism","Interactionism"],correct:3,explanation:"Interactionism holds that nature and nurture combine to determine behaviour."},
-{id:"id4",topic:"Issues & Debates",type:"mcq",marks:1,text:"Cultural relativism is the view that:",options:["One culture is superior to others","Behaviour must be understood within its cultural context","All cultures are the same","Psychology is universally applicable"],correct:1,explanation:"Cultural relativism holds that behaviour/norms can only be understood within their cultural context."},
+{id:"id1",board:"AQA",topic:"Issues & Debates",type:"mcq",marks:1,text:"The nomothetic approach aims to:",options:["Study unique individuals in depth","Establish general laws of behaviour","Focus on subjective experience","Reject scientific methods"],correct:1,explanation:"The nomothetic approach seeks general laws applicable to large groups."},
+{id:"id2",board:"AQA",topic:"Issues & Debates",type:"mcq",marks:1,text:"Androcentrism in psychology refers to:",options:["Cultural bias","A male-centred view","Exaggerating gender differences","Ignoring biology"],correct:1,explanation:"Androcentrism centres psychology around male experience and applies findings to women."},
+{id:"id3",board:"AQA",topic:"Issues & Debates",type:"mcq",marks:1,text:"Which term best represents the view that biology and environment work together?",options:["Determinism","Ethnocentrism","Holism","Interactionism"],correct:3,explanation:"Interactionism holds that nature and nurture combine to determine behaviour."},
+{id:"id4",board:"AQA",topic:"Issues & Debates",type:"mcq",marks:1,text:"Cultural relativism is the view that:",options:["One culture is superior to others","Behaviour must be understood within its cultural context","All cultures are the same","Psychology is universally applicable"],correct:1,explanation:"Cultural relativism holds that behaviour/norms can only be understood within their cultural context."},
 // -- Schizophrenia --
-{id:"sz1",topic:"Schizophrenia",type:"mcq",marks:1,text:"Positive symptoms of schizophrenia include:",options:["Avolition and flat affect","Hallucinations and delusions","Poverty of speech","Social withdrawal"],correct:1,explanation:"Positive symptoms are additional experiences like hallucinations and delusions."},
-{id:"sz2",topic:"Schizophrenia",type:"mcq",marks:1,text:"Typical antipsychotics work by:",options:["Increasing serotonin","Blocking dopamine receptors","Increasing GABA","Blocking noradrenaline"],correct:1,explanation:"Typical antipsychotics are dopamine antagonists blocking D2 receptors."},
+{id:"sz1",board:"AQA",topic:"Schizophrenia",type:"mcq",marks:1,text:"Positive symptoms of schizophrenia include:",options:["Avolition and flat affect","Hallucinations and delusions","Poverty of speech","Social withdrawal"],correct:1,explanation:"Positive symptoms are additional experiences like hallucinations and delusions."},
+{id:"sz2",board:"AQA",topic:"Schizophrenia",type:"mcq",marks:1,text:"Typical antipsychotics work by:",options:["Increasing serotonin","Blocking dopamine receptors","Increasing GABA","Blocking noradrenaline"],correct:1,explanation:"Typical antipsychotics are dopamine antagonists blocking D2 receptors."},
 // -- Relationships --
-{id:"rl1",topic:"Relationships",type:"mcq",marks:1,text:"The matching hypothesis suggests people:",options:["Seek the most attractive partner","Form relationships with similarly attractive partners","Prefer opposite partners","Choose partners based on wealth"],correct:1,explanation:"The matching hypothesis proposes people pair with others of similar perceived attractiveness."},
-{id:"rl2",topic:"Relationships",type:"mcq",marks:1,text:"Duck's model of relationship breakdown begins with:",options:["Dyadic phase","Social phase","Intra-psychic phase","Grave-dressing phase"],correct:2,explanation:"Duck's model starts with the intra-psychic phase where one partner privately reflects on dissatisfaction."},
+{id:"rl1",board:"AQA",topic:"Relationships",type:"mcq",marks:1,text:"The matching hypothesis suggests people:",options:["Seek the most attractive partner","Form relationships with similarly attractive partners","Prefer opposite partners","Choose partners based on wealth"],correct:1,explanation:"The matching hypothesis proposes people pair with others of similar perceived attractiveness."},
+{id:"rl2",board:"AQA",topic:"Relationships",type:"mcq",marks:1,text:"Duck's model of relationship breakdown begins with:",options:["Dyadic phase","Social phase","Intra-psychic phase","Grave-dressing phase"],correct:2,explanation:"Duck's model starts with the intra-psychic phase where one partner privately reflects on dissatisfaction."},
 
 // ========== MULTI-SELECT (2-4 marks) ==========
 // Select the correct key points from options
-{id:"ms1",topic:"Memory",type:"multiselect",marks:2,
+{id:"ms1",board:"AQA",topic:"Memory",type:"multiselect",marks:2,
   text:"Identify TWO behavioural characteristics of depression.",
   options:["Hallucinations","Changes in sleep patterns","Social withdrawal","Delusions of grandeur","Increased energy"],
   correctIndices:[1,2],
   explanation:"Behavioural characteristics include changes in sleep patterns, changes in eating, social withdrawal, and reduced movement/speech."},
-{id:"ms2",topic:"Psychopathology",type:"multiselect",marks:2,
+{id:"ms2",board:"AQA",topic:"Psychopathology",type:"multiselect",marks:2,
   text:"Which TWO are emotional characteristics of OCD?",
   options:["Hypervigilance","Low mood","Compulsive rituals","Self-loathing","Obsessive thoughts"],
   correctIndices:[1,3],
   explanation:"Emotional characteristics: low mood/anxiety about obsessions, and self-loathing/disgust."},
-{id:"ms3",topic:"Attachment",type:"multiselect",marks:2,
+{id:"ms3",board:"AQA",topic:"Attachment",type:"multiselect",marks:2,
   text:"Identify TWO differences between insecure-avoidant and insecure-resistant attachment.",
   options:["Avoidant shows LOW separation anxiety; resistant shows HIGH","Avoidant shows HIGH stranger anxiety; resistant shows LOW","Avoidant shows indifference on reunion; resistant shows ambivalence","Avoidant clings to caregiver; resistant explores independently","Both show identical reunion behaviour"],
   correctIndices:[0,2],
   explanation:"Avoidant: low separation anxiety, indifferent on reunion. Resistant: high separation anxiety, ambivalent (approach then push away) on reunion."},
-{id:"ms4",topic:"Social Influence",type:"multiselect",marks:3,
+{id:"ms4",board:"AQA",topic:"Social Influence",type:"multiselect",marks:3,
   text:"Identify THREE factors affecting minority influence.",
   options:["Consistency","Group size","Commitment","Unanimity","Flexibility","Obedience"],
   correctIndices:[0,2,4],
   explanation:"The three key factors are consistency (maintaining the same message), commitment (showing personal sacrifice), and flexibility (being willing to adapt while maintaining core position)."},
-{id:"ms5",topic:"Memory",type:"multiselect",marks:4,
+{id:"ms5",board:"AQA",topic:"Memory",type:"multiselect",marks:4,
   text:"Select FOUR techniques used in the cognitive interview.",
   options:["Report everything","Use leading questions","Reinstate the context","Recall in reverse order","Increase pressure on witness","Change perspective","Show photos of suspects"],
   correctIndices:[0,2,3,5],
   explanation:"The four CI techniques: report everything, reinstate the context, recall in reverse/changed order, and change perspective."},
-{id:"ms6",topic:"Biopsychology",type:"multiselect",marks:2,
+{id:"ms6",board:"AQA",topic:"Biopsychology",type:"multiselect",marks:2,
   text:"Which TWO statements about fMRI and ERPs are correct?",
   options:["fMRI has better spatial resolution than ERPs","ERPs have better spatial resolution than fMRI","fMRI has better temporal resolution than ERPs","ERPs have better temporal resolution than fMRI","Both are invasive techniques"],
   correctIndices:[0,3],
   explanation:"fMRI has excellent spatial resolution (millimetre precision). ERPs have excellent temporal resolution (millisecond precision)."},
-{id:"ms7",topic:"Approaches",type:"multiselect",marks:2,
+{id:"ms7",board:"AQA",topic:"Approaches",type:"multiselect",marks:2,
   text:"Select TWO correct statements about defence mechanisms.",
   options:["They operate consciously","They protect the ego from anxiety","They are used by the superego only","They work at an unconscious level","They were proposed by Maslow"],
   correctIndices:[1,3],
   explanation:"Defence mechanisms protect the ego from anxiety and operate at an unconscious level."},
-{id:"ms8",topic:"Psychopathology",type:"multiselect",marks:4,
+{id:"ms8",board:"AQA",topic:"Psychopathology",type:"multiselect",marks:4,
   text:"Select FOUR of Jahoda's criteria for ideal mental health.",
   options:["Self-actualisation","Statistical normality","Accurate perception of reality","Resistance to stress","Environmental mastery","High income","Physical fitness"],
   correctIndices:[0,2,3,4],
   explanation:"Jahoda's criteria: self-actualisation, accurate perception of reality, resistance to stress, environmental mastery, autonomy, positive self-attitudes."},
-{id:"ms9",topic:"Attachment",type:"multiselect",marks:2,
+{id:"ms9",board:"AQA",topic:"Attachment",type:"multiselect",marks:2,
   text:"Which TWO concepts were introduced by Bowlby?",
   options:["Interactional synchrony","Critical period","Multiple attachment stage","Internal working model","Strange Situation"],
   correctIndices:[1,3],
   explanation:"Bowlby introduced the critical period and the internal working model. Interactional synchrony and multiple attachment stages were identified by other researchers. The Strange Situation was devised by Ainsworth."},
-{id:"ms10",topic:"Memory",type:"multiselect",marks:2,
+{id:"ms10",board:"AQA",topic:"Memory",type:"multiselect",marks:2,
   text:"Select TWO ways episodic memories differ from semantic memories.",
   options:["Episodic involves time and place context; semantic does not","Semantic is autobiographical; episodic is factual","Episodic involves emotional content; semantic does not","Both types are procedural","Semantic requires conscious recall; episodic does not"],
   correctIndices:[0,2],
   explanation:"Episodic memories are time-stamped with contextual and emotional information. Semantic memories are factual knowledge without personal context."},
-{id:"ms11",topic:"Research Methods",type:"multiselect",marks:3,
+{id:"ms11",board:"AQA",topic:"Research Methods",type:"multiselect",marks:3,
   text:"Select THREE reasons for choosing a chi-squared test.",
   options:["Test of difference or association","Data is at least interval level","Independent groups design","Data is nominal/categorical","Related/repeated measures design","Looking for a correlation"],
   correctIndices:[0,2,3],
   explanation:"Chi-squared: test of association/difference, independent groups, nominal/categorical data."},
-{id:"ms12",topic:"Social Influence",type:"multiselect",marks:2,
+{id:"ms12",board:"AQA",topic:"Social Influence",type:"multiselect",marks:2,
   text:"Select TWO features that describe Zimbardo's Stanford Prison Experiment.",
   options:["Natural experiment","Controlled observation","Covert observation","Participant observation","Longitudinal study"],
   correctIndices:[1,3],
   explanation:"The SPE was a controlled observation (standardised setup) and participant observation (Zimbardo was superintendent)."},
-{id:"ms13",topic:"Psychopathology",type:"multiselect",marks:2,
+{id:"ms13",board:"AQA",topic:"Psychopathology",type:"multiselect",marks:2,
   text:"According to the two-process model, identify which process acquires a phobia and which maintains it.",
   options:["Classical conditioning acquires; operant conditioning maintains","Operant conditioning acquires; classical conditioning maintains","Social learning acquires; cognitive bias maintains","Both acquired and maintained by classical conditioning"],
   correctIndices:[0],
   explanation:"CC acquires (association of fear with neutral stimulus) and OC maintains (avoidance is negatively reinforced by anxiety relief)."},
-{id:"ms14",topic:"Issues & Debates",type:"multiselect",marks:2,
+{id:"ms14",board:"AQA",topic:"Issues & Debates",type:"multiselect",marks:2,
   text:"Select TWO ways psychologists could reduce cultural bias in research.",
   options:["Use cross-cultural research with equivalent methodologies","Only study Western cultures","Use indigenous researchers from the culture being studied","Apply findings from one culture universally","Assume all cultures are identical"],
   correctIndices:[0,2],
   explanation:"Using cross-cultural research and indigenous researchers helps ensure findings are not ethnocentric."},
 
 // ========== 8-MARK ESSAY BUILDER ==========
-{id:"e8_1",topic:"Memory",type:"puzzle8",marks:8,
+{id:"e8_1",board:"AQA",topic:"Memory",type:"puzzle8",marks:8,
   text:"Outline and evaluate research into duration in memory.",
   pieces:[
     {ao:"AO1",text:"Peterson & Peterson (1959): trigrams + counting backwards. Recall dropped from 80% at 3 seconds to 10% at 18 seconds. STM duration ~15-30 seconds without rehearsal."},
@@ -499,7 +543,7 @@ const QUESTIONS = [
     {ao:"AO3",text:"Bahrick's study has higher ecological validity as it used real, meaningful material (photos of classmates) rather than artificial stimuli."},
     {ao:"AO3",text:"However, Bahrick's study cannot control for the frequency with which participants may have rehearsed/encountered old photos over the years."}
   ]},
-{id:"e8_2",topic:"Social Influence",type:"puzzle8",marks:8,
+{id:"e8_2",board:"AQA",topic:"Social Influence",type:"puzzle8",marks:8,
   text:"Discuss legitimacy of authority as an explanation for obedience.",
   pieces:[
     {ao:"AO1",text:"Legitimacy of authority: people obey those perceived to hold power in a social hierarchy. Legitimacy is increased by visible symbols such as uniform and the setting/institution."},
@@ -509,7 +553,7 @@ const QUESTIONS = [
     {ao:"AO3",text:"A limitation is that legitimacy of authority cannot explain why some people disobey. Individual differences such as locus of control play a role."},
     {ao:"AO3",text:"Hofling's hospital study found 21/22 nurses obeyed a doctor's phone instruction to administer double the maximum dose, demonstrating legitimacy in real-life settings."}
   ]},
-{id:"e8_3",topic:"Psychopathology",type:"puzzle8",marks:8,
+{id:"e8_3",board:"AQA",topic:"Psychopathology",type:"puzzle8",marks:8,
   text:"Outline and evaluate the genetic explanation for OCD.",
   pieces:[
     {ao:"AO1",text:"OCD is an inherited condition with vulnerability passed across generations. It is polygenic: Taylor (2013) identified 230 candidate genes."},
@@ -519,7 +563,7 @@ const QUESTIONS = [
     {ao:"AO3",text:"The genetic explanation is biologically reductionist, reducing a complex disorder to genes while ignoring psychological and social factors."},
     {ao:"AO3",text:"A strength is that genetic understanding could lead to gene therapy as a potential future treatment for OCD."}
   ]},
-{id:"e8_4",topic:"Attachment",type:"puzzle8",marks:8,
+{id:"e8_4",board:"AQA",topic:"Attachment",type:"puzzle8",marks:8,
   text:"Discuss the influence of early attachment on childhood and later relationships.",
   pieces:[
     {ao:"AO1",text:"Bowlby's internal working model (IWM) proposes that the first attachment creates a mental template/schema for all future relationships."},
@@ -529,7 +573,7 @@ const QUESTIONS = [
     {ao:"AO3",text:"The IWM is a hypothetical construct that cannot be directly measured or observed, making it difficult to test scientifically."},
     {ao:"AO3",text:"Retrospective assessment of early attachment in adult studies is unreliable as memories may be distorted over time."}
   ]},
-{id:"e8_5",topic:"Biopsychology",type:"puzzle8",marks:8,
+{id:"e8_5",board:"AQA",topic:"Biopsychology",type:"puzzle8",marks:8,
   text:"Outline and evaluate split-brain research.",
   pieces:[
     {ao:"AO1",text:"Sperry studied patients who had corpus callosum surgery (for epilepsy). Used visual tests presenting images to specific visual fields."},
@@ -539,7 +583,7 @@ const QUESTIONS = [
     {ao:"AO3",text:"A limitation is that split-brain patients are not representative of the normal population, as their brains have been surgically altered."},
     {ao:"AO3",text:"The extent of corpus callosum disconnection varied between patients, and there were no valid control groups of non-operated patients."}
   ]},
-{id:"e8_6",topic:"Approaches",type:"puzzle8",marks:8,
+{id:"e8_6",board:"AQA",topic:"Approaches",type:"puzzle8",marks:8,
   text:"Discuss consistency and flexibility as processes involved in minority influence.",
   pieces:[
     {ao:"AO1",text:"Consistency means repeating the same message over time (diachronic) and between group members (synchronic). This creates doubt in the majority."},
@@ -549,7 +593,7 @@ const QUESTIONS = [
     {ao:"AO3",text:"There is an inherent contradiction between consistency and flexibility: being too consistent can seem rigid, while too much flexibility undermines the message."},
     {ao:"AO3",text:"Lab studies use artificial tasks (judging slide colours) which lack ecological validity compared to real-life minority influence situations."}
   ]},
-{id:"e8_7",topic:"Psychopathology",type:"puzzle8",marks:8,
+{id:"e8_7",board:"AQA",topic:"Psychopathology",type:"puzzle8",marks:8,
   text:"Outline and evaluate the ABC model of depression. Refer to: 'Dropped change at till. Everybody knew I was useless. Why can I not do anything right?'",
   context:"Diary extract: 'Managed to drag myself out of the house but wished I hadn't. Went to the shop but dropped my change at the till. Everybody knew I was useless. Why can I not do anything right? No one else I know does such stupid things.'",
   pieces:[
@@ -562,7 +606,7 @@ const QUESTIONS = [
   ]},
 
 // ========== 12-MARK ESSAY BUILDER ==========
-{id:"e12_1",topic:"Research Methods",type:"puzzle12",marks:12,
+{id:"e12_1",board:"AQA",topic:"Research Methods",type:"puzzle12",marks:12,
   text:"A researcher designs an experiment to test whether a new study technique improves recall. Design this study, including: hypothesis, variables, experimental design, sampling method, ethical considerations, and how data would be analysed.",
   pieces:[
     {ao:"AO2",text:"Hypothesis: Students using the new technique will recall significantly more words than those using the standard technique (directional)."},
@@ -576,7 +620,7 @@ const QUESTIONS = [
     {ao:"AO3",text:"Lab experiment has high control over extraneous variables but low ecological validity. The controlled word list may not reflect real-world studying."},
     {ao:"AO3",text:"The study could be improved by using a matched pairs design, matching participants on prior academic ability to reduce participant variables."}
   ]},
-{id:"e12_2",topic:"Research Methods",type:"puzzle12",marks:12,
+{id:"e12_2",board:"AQA",topic:"Research Methods",type:"puzzle12",marks:12,
   text:"A psychologist investigated the relationship between stress hormones (measured in micrograms per litre) and heart rate (measured in bpm). She used a Pearson's r test and found a correlation of +0.42 with 20 participants. Discuss this study including the statistical analysis.",
   pieces:[
     {ao:"AO2",text:"The correlation of +0.42 indicates a moderate positive relationship: as stress hormones increase, heart rate also tends to increase."},
@@ -590,7 +634,7 @@ const QUESTIONS = [
   ]},
 
 // ========== 16-MARK PUZZLES ==========
-{id:"p16_1",topic:"Attachment",type:"puzzle16",marks:16,
+{id:"p16_1",board:"AQA",topic:"Attachment",type:"puzzle16",marks:16,
   text:"Discuss Romanian orphan studies.",
   pieces:[
     {ao:"AO1",text:"Romanian orphans were raised in extremely poor conditions with minimal emotional care after the fall of communism."},
@@ -604,7 +648,7 @@ const QUESTIONS = [
     {ao:"AO3",text:"A limitation is the lack of long-term adult follow-up data at the time of many studies."},
     {ao:"AO3",text:"Confounding variable: more sociable children may have been selected for adoption, inflating recovery figures."}
   ]},
-{id:"p16_2",topic:"Psychopathology",type:"puzzle16",marks:16,
+{id:"p16_2",board:"AQA",topic:"Psychopathology",type:"puzzle16",marks:16,
   text:"Discuss the cognitive approach to explaining depression.",
   pieces:[
     {ao:"AO1",text:"Cognitive explanations suggest vulnerability to depression comes from faulty thinking patterns and negative self-schemas."},
@@ -618,7 +662,7 @@ const QUESTIONS = [
     {ao:"AO3",text:"Cognitive explanations tend to underplay the emotional aspects of depression, focusing too heavily on thinking patterns."},
     {ao:"AO3",text:"Alternative: the neurochemical explanation (low serotonin) suggests biology may be more important than cognition."}
   ]},
-{id:"p16_3",topic:"Social Influence",type:"puzzle16",marks:16,
+{id:"p16_3",board:"AQA",topic:"Social Influence",type:"puzzle16",marks:16,
   text:"Discuss research into minority influence.",
   pieces:[
     {ao:"AO1",text:"Key processes: consistency (synchronic/diachronic), commitment (augmentation principle), and flexibility. Leads to conversion/internalisation."},
@@ -632,7 +676,7 @@ const QUESTIONS = [
     {ao:"AO3",text:"Real-life examples (civil rights, suffragettes) demonstrate minority influence leading to genuine social change."},
     {ao:"AO3",text:"Wood et al. meta-analysis found minorities were more influential on private measures of attitude than public, supporting conversion."}
   ]},
-{id:"p16_4",topic:"Memory",type:"puzzle16",marks:16,
+{id:"p16_4",board:"AQA",topic:"Memory",type:"puzzle16",marks:16,
   text:"Discuss the working memory model. Refer to: 'Rory talks to grandparent while playing a colour-matching game on his phone. He stops the game when asked to describe his route to school.'",
   context:"Rory is talking with his grandparent and playing a game on his phone (matching blocks by colour). When his grandparent asks him to describe his route to school, Rory puts down his game.",
   pieces:[
@@ -647,7 +691,7 @@ const QUESTIONS = [
     {ao:"AO3",text:"The central executive remains vague and poorly specified despite being the most important component."},
     {ao:"AO3",text:"Lab studies of working memory use artificial tasks, reducing ecological validity of findings."}
   ]},
-{id:"p16_5",topic:"Attachment",type:"puzzle16",marks:16,
+{id:"p16_5",board:"AQA",topic:"Attachment",type:"puzzle16",marks:16,
   text:"Discuss Bowlby's theory of maternal deprivation. Refer to: 'Ryan spent first 5 years in care. Difficult relationships, few friends, below average at school, in trouble with police.'",
   context:"Ryan is 14 and spent his first five years in care. He has a difficult relationship with adoptive parents, few friends, below-average school performance, and has been in trouble with police for antisocial behaviour.",
   pieces:[
@@ -662,7 +706,7 @@ const QUESTIONS = [
     {ao:"AO3",text:"Rutter criticised Bowlby for failing to distinguish between deprivation (loss of attachment) and privation (never forming one)."},
     {ao:"AO3",text:"The theory has been criticised for gender bias, placing blame on mothers and implying women should not work."}
   ]},
-{id:"p16_6",topic:"Biopsychology",type:"puzzle16",marks:16,
+{id:"p16_6",board:"AQA",topic:"Biopsychology",type:"puzzle16",marks:16,
   text:"Discuss endogenous pacemakers and exogenous zeitgebers on the sleep-wake cycle.",
   pieces:[
     {ao:"AO1",text:"The SCN is the main endogenous pacemaker, located in the hypothalamus, receiving light information from the retina."},
@@ -676,7 +720,7 @@ const QUESTIONS = [
     {ao:"AO3",text:"Practical applications: understanding jet lag and shift work, where the internal clock becomes desynchronised from zeitgebers."},
     {ao:"AO3",text:"Much evidence comes from animal studies which may not generalise to human circadian rhythms."}
   ]},
-{id:"p16_7",topic:"Schizophrenia",type:"puzzle16",marks:16,
+{id:"p16_7",board:"AQA",topic:"Schizophrenia",type:"puzzle16",marks:16,
   text:"Discuss biological explanations for schizophrenia.",
   pieces:[
     {ao:"AO1",text:"The dopamine hypothesis: excess dopamine activity in the mesolimbic pathway causes positive symptoms."},
@@ -690,7 +734,7 @@ const QUESTIONS = [
     {ao:"AO3",text:"Biological explanations have led to effective drug treatments, supporting biology's role."},
     {ao:"AO3",text:"The diathesis-stress model offers an interactionist alternative: genetic vulnerability + environmental stress triggers the disorder."}
   ]},
-{id:"p16_8",topic:"Issues & Debates",type:"puzzle16",marks:16,
+{id:"p16_8",board:"AQA",topic:"Issues & Debates",type:"puzzle16",marks:16,
   text:"Discuss determinism in psychology.",
   context:"Maria was adopted as a baby by loving parents. She has grown up to be a confident, outgoing woman. Her biological mother had a history of severe anxiety.",
   pieces:[
@@ -704,6 +748,188 @@ const QUESTIONS = [
     {ao:"AO3",text:"The legal system assumes free will: people are held responsible for their actions. Hard determinism undermines moral responsibility."},
     {ao:"AO3",text:"The humanistic approach rejects determinism entirely, arguing humans have free will and the capacity for self-actualisation."},
     {ao:"AO3",text:"Research supports a middle ground: the diathesis-stress model shows genes create vulnerability but environmental triggers are needed for expression."}
+  ]},
+
+// ===========================================================
+// EDEXCEL QUESTIONS
+// ===========================================================
+
+// ========== EDEXCEL MCQ (1 mark) ==========
+// -- Social Psychology (Edexcel Paper 1) --
+{id:"edx_sp1",board:"Edexcel",topic:"Social Psychology",type:"mcq",marks:1,text:"According to realistic conflict theory, inter-group hostility arises from:",options:["Innate aggression","Competition over limited resources","Social identity categorisation","Conformity to group norms"],correct:1,explanation:"Realistic conflict theory (Sherif) proposes that inter-group conflict results from competition over scarce/limited resources."},
+{id:"edx_sp2",board:"Edexcel",topic:"Social Psychology",type:"mcq",marks:1,text:"In Milgram's agency theory, the 'agentic state' occurs when a person:",options:["Acts autonomously based on their own conscience","Views themselves as carrying out the wishes of an authority figure","Identifies with an in-group","Conforms due to normative social influence"],correct:1,explanation:"The agentic state is when people see themselves as agents of an authority figure, carrying out their wishes rather than acting on personal moral codes."},
+{id:"edx_sp3",board:"Edexcel",topic:"Social Psychology",type:"mcq",marks:1,text:"Social identity theory was proposed by:",options:["Milgram","Sherif","Tajfel","Bandura"],correct:2,explanation:"Tajfel proposed social identity theory, explaining how categorisation into in-groups and out-groups affects behaviour."},
+{id:"edx_sp4",board:"Edexcel",topic:"Social Psychology",type:"mcq",marks:1,text:"In Sherif's Robbers Cave study, conflict between groups was reduced by:",options:["Separating the groups","Introducing superordinate goals","Punishing aggressive behaviour","Having authority figures mediate"],correct:1,explanation:"Sherif found that superordinate goals (shared goals requiring cooperation) reduced inter-group conflict."},
+{id:"edx_sp5",board:"Edexcel",topic:"Social Psychology",type:"mcq",marks:1,text:"Which of these is NOT a feature of the agentic state?",options:["Moral strain","Diffusion of responsibility","Personal autonomy","Binding factors"],correct:2,explanation:"Personal autonomy is the opposite of the agentic state. In the agentic state, people lose autonomy and experience moral strain, diffusion of responsibility, and binding factors that keep them obedient."},
+{id:"edx_sp6",board:"Edexcel",topic:"Social Psychology",type:"mcq",marks:1,text:"Tajfel's minimal groups study found that participants:",options:["Showed no in-group favouritism","Maximised joint profit for both groups","Favoured their in-group even when categories were arbitrary","Only discriminated when there was a real conflict"],correct:2,explanation:"Tajfel found in-group favouritism occurred even when group membership was based on trivial/arbitrary criteria (e.g. dot estimation tasks)."},
+{id:"edx_sp7",board:"Edexcel",topic:"Social Psychology",type:"mcq",marks:1,text:"Burger (2009) replicated Milgram's study but stopped at:",options:["150 volts","300 volts","375 volts","450 volts"],correct:0,explanation:"Burger replicated Milgram's study with ethical modifications, stopping participants at 150V to minimise distress. He found 70% were willing to continue past 150V."},
+
+// -- Cognitive Psychology (Edexcel Paper 1) --
+{id:"edx_cp1",board:"Edexcel",topic:"Cognitive Psychology",type:"mcq",marks:1,text:"Tulving's model of long-term memory distinguishes between:",options:["STM and LTM","Sensory, short-term and long-term memory","Episodic, semantic and procedural memory","Working memory and long-term memory"],correct:2,explanation:"Tulving identified three types of LTM: episodic (autobiographical events), semantic (facts/knowledge) and procedural (skills/motor memory)."},
+{id:"edx_cp2",board:"Edexcel",topic:"Cognitive Psychology",type:"mcq",marks:1,text:"Schmolck et al. (2002) studied patients with damage to which brain area and found impaired semantic memory?",options:["Hippocampus","Prefrontal cortex","Temporal lobe","Occipital lobe"],correct:2,explanation:"Schmolck et al. found that patients with damage to temporal lobe structures had impaired semantic memory while episodic memory could also be affected."},
+{id:"edx_cp3",board:"Edexcel",topic:"Cognitive Psychology",type:"mcq",marks:1,text:"The case of HM (Henry Molaison) demonstrated that:",options:["STM and LTM are the same store","The hippocampus is essential for forming new long-term memories","Procedural memory requires the hippocampus","Semantic memory is stored in the frontal lobe"],correct:1,explanation:"HM had his hippocampus removed and could no longer form new long-term memories (anterograde amnesia), but retained existing memories and could learn new motor skills."},
+{id:"edx_cp4",board:"Edexcel",topic:"Cognitive Psychology",type:"mcq",marks:1,text:"Retrograde amnesia refers to:",options:["Inability to form new memories after brain damage","Loss of memories formed before brain damage","Inability to remember procedural skills","Loss of semantic but not episodic memories"],correct:1,explanation:"Retrograde amnesia is the loss of memories formed before the onset of amnesia, unlike anterograde amnesia (inability to form new memories)."},
+{id:"edx_cp5",board:"Edexcel",topic:"Cognitive Psychology",type:"mcq",marks:1,text:"Bartlett's theory of reconstructive memory proposes that memories are:",options:["Exact recordings of events stored like a video","Actively rebuilt using schemas each time they are recalled","Only affected by leading questions","Always accurate if encoded deeply"],correct:1,explanation:"Bartlett proposed that memory is an active reconstruction process influenced by schemas (pre-existing knowledge and expectations) rather than an exact playback."},
+
+// -- Biological Psychology (Edexcel Paper 1) --
+{id:"edx_bp1",board:"Edexcel",topic:"Biological Psychology",type:"mcq",marks:1,text:"The brain area most associated with aggression according to biological psychology is the:",options:["Hippocampus","Amygdala","Cerebellum","Occipital lobe"],correct:1,explanation:"The amygdala is the brain structure most closely linked to aggressive behaviour and emotional responses."},
+{id:"edx_bp2",board:"Edexcel",topic:"Biological Psychology",type:"mcq",marks:1,text:"Which neurotransmitter is most associated with reduced aggression when levels are HIGH?",options:["Dopamine","Noradrenaline","Serotonin","GABA"],correct:2,explanation:"High serotonin levels are associated with reduced aggression. Low serotonin is linked to increased impulsive aggressive behaviour."},
+{id:"edx_bp3",board:"Edexcel",topic:"Biological Psychology",type:"mcq",marks:1,text:"Raine et al. (1997) found that murderers pleading NGRI had:",options:["Higher prefrontal cortex activity than controls","Lower prefrontal cortex activity and abnormal amygdala activity","No brain differences from controls","Larger hippocampi than controls"],correct:1,explanation:"Raine et al. found that NGRI murderers had reduced prefrontal cortex activity and abnormal functioning in the amygdala, thalamus and hippocampus."},
+{id:"edx_bp4",board:"Edexcel",topic:"Biological Psychology",type:"mcq",marks:1,text:"The role of the prefrontal cortex in aggression is to:",options:["Trigger the fight-or-flight response","Regulate and inhibit aggressive impulses","Produce testosterone","Activate the sympathetic nervous system"],correct:1,explanation:"The prefrontal cortex is involved in decision-making and impulse control. Reduced prefrontal activity is linked to poor regulation of aggressive impulses."},
+{id:"edx_bp5",board:"Edexcel",topic:"Biological Psychology",type:"mcq",marks:1,text:"Which hormone is most strongly linked to aggression?",options:["Oestrogen","Cortisol","Testosterone","Melatonin"],correct:2,explanation:"Testosterone is the hormone most strongly associated with aggression. Higher testosterone levels correlate with increased aggressive behaviour."},
+
+// -- Learning Theories (Edexcel Paper 1) --
+{id:"edx_lt1",board:"Edexcel",topic:"Learning Theories",type:"mcq",marks:1,text:"In Pavlov's classical conditioning, the neutral stimulus becomes a conditioned stimulus when:",options:["It naturally produces a response","It is paired with the unconditioned stimulus repeatedly","It is reinforced with a reward","The organism habituates to it"],correct:1,explanation:"Through repeated pairing with the UCS, the neutral stimulus becomes a conditioned stimulus that can produce the conditioned response alone."},
+{id:"edx_lt2",board:"Edexcel",topic:"Learning Theories",type:"mcq",marks:1,text:"In operant conditioning, negative reinforcement involves:",options:["Punishing unwanted behaviour","Removing an unpleasant stimulus to increase behaviour","Adding a pleasant stimulus to increase behaviour","Removing a pleasant stimulus to decrease behaviour"],correct:1,explanation:"Negative reinforcement increases behaviour by removing an aversive/unpleasant stimulus. It is NOT punishment."},
+{id:"edx_lt3",board:"Edexcel",topic:"Learning Theories",type:"mcq",marks:1,text:"Bandura's Bobo doll study demonstrated that children:",options:["Are innately aggressive","Learn aggressive behaviour through observation and imitation","Only imitate same-sex models","Cannot learn from watching others"],correct:1,explanation:"Bandura showed that children who observed an aggressive adult model were more likely to imitate that aggressive behaviour toward the Bobo doll."},
+{id:"edx_lt4",board:"Edexcel",topic:"Learning Theories",type:"mcq",marks:1,text:"In social learning theory, vicarious reinforcement means:",options:["Being directly rewarded for behaviour","Observing someone else being rewarded for their behaviour","Self-reinforcement through internal satisfaction","Punishment observed in others"],correct:1,explanation:"Vicarious reinforcement occurs when an observer sees a model being rewarded, making the observer more likely to imitate the behaviour."},
+{id:"edx_lt5",board:"Edexcel",topic:"Learning Theories",type:"mcq",marks:1,text:"Watson and Rayner's 'Little Albert' study demonstrated:",options:["Operant conditioning of a phobia","Classical conditioning of a fear response","Observational learning of aggression","Systematic desensitization"],correct:1,explanation:"Watson and Rayner classically conditioned Little Albert to fear a white rat by pairing it with a loud noise (UCS), creating a conditioned fear response."},
+{id:"edx_lt6",board:"Edexcel",topic:"Learning Theories",type:"mcq",marks:1,text:"Which schedule of reinforcement produces the highest, most consistent rate of responding?",options:["Fixed ratio","Variable ratio","Fixed interval","Continuous reinforcement"],correct:1,explanation:"Variable ratio schedules produce the highest and most consistent response rates because the reinforcement is unpredictable (e.g. gambling, slot machines)."},
+{id:"edx_lt7",board:"Edexcel",topic:"Learning Theories",type:"mcq",marks:1,text:"Bandura identified four mediational processes in SLT. Which is NOT one of them?",options:["Attention","Retention","Reinforcement","Motivation"],correct:2,explanation:"Bandura's four mediational processes are: attention, retention, reproduction (motor ability), and motivation. Reinforcement affects motivation but is not itself a mediational process."},
+
+// -- Clinical Psychology (Edexcel Paper 2) --
+{id:"edx_cl1",board:"Edexcel",topic:"Clinical Psychology",type:"mcq",marks:1,text:"The DSM is published by:",options:["The British Psychological Society","The World Health Organisation","The American Psychiatric Association","The National Health Service"],correct:2,explanation:"The DSM (Diagnostic and Statistical Manual of Mental Disorders) is published by the American Psychiatric Association (APA)."},
+{id:"edx_cl2",board:"Edexcel",topic:"Clinical Psychology",type:"mcq",marks:1,text:"The ICD classification system is published by:",options:["The American Psychiatric Association","The World Health Organisation","The British Medical Association","The Royal College of Psychiatrists"],correct:1,explanation:"The ICD (International Classification of Diseases) is published by the World Health Organisation (WHO)."},
+{id:"edx_cl3",board:"Edexcel",topic:"Clinical Psychology",type:"mcq",marks:1,text:"The '4 Ds' used to define abnormality in clinical psychology are:",options:["Deviance, Distress, Dysfunction, Danger","Diagnosis, Disease, Disorder, Disability","Depression, Delusion, Dissociation, Dependency","Deviance, Delay, Deficit, Distortion"],correct:0,explanation:"The 4 Ds are: Deviance (unusual behaviour), Distress (personal suffering), Dysfunction (impaired daily functioning), and Danger (risk to self/others)."},
+{id:"edx_cl4",board:"Edexcel",topic:"Clinical Psychology",type:"mcq",marks:1,text:"Rosenhan's (1973) study 'On Being Sane in Insane Places' challenged the:",options:["Effectiveness of drug treatments","Validity of psychiatric diagnosis","Role of genetics in mental illness","Usefulness of CBT"],correct:1,explanation:"Rosenhan showed that sane pseudopatients were diagnosed with schizophrenia and admitted to psychiatric hospitals, challenging the validity and reliability of psychiatric diagnosis."},
+{id:"edx_cl5",board:"Edexcel",topic:"Clinical Psychology",type:"mcq",marks:1,text:"A key difference between DSM-5 and ICD-11 is:",options:["ICD is only used in America","DSM covers physical and mental health conditions","ICD is freely available; DSM must be purchased","DSM is used internationally; ICD is only for the UK"],correct:2,explanation:"The ICD is freely available online from the WHO and used internationally, while the DSM must be purchased from the APA. The ICD covers all health conditions while the DSM focuses on mental health."},
+{id:"edx_cl6",board:"Edexcel",topic:"Clinical Psychology",type:"mcq",marks:1,text:"Cognitive Behavioural Therapy (CBT) for depression primarily targets:",options:["Unconscious conflicts from childhood","Faulty thinking patterns and negative beliefs","Chemical imbalances in the brain","Learned behaviours through conditioning"],correct:1,explanation:"CBT targets negative automatic thoughts, cognitive distortions, and maladaptive beliefs, helping patients identify and challenge faulty thinking patterns."},
+{id:"edx_cl7",board:"Edexcel",topic:"Clinical Psychology",type:"mcq",marks:1,text:"Which of these is a positive symptom of schizophrenia?",options:["Avolition","Alogia","Hallucinations","Flat affect"],correct:2,explanation:"Hallucinations are positive symptoms (additional experiences). Avolition, alogia, and flat affect are negative symptoms (loss of normal functioning)."},
+{id:"edx_cl8",board:"Edexcel",topic:"Clinical Psychology",type:"mcq",marks:1,text:"Anti-depressant SSRIs work by:",options:["Blocking dopamine receptors","Preventing reuptake of serotonin at the synapse","Increasing noradrenaline production","Reducing cortisol levels"],correct:1,explanation:"SSRIs (Selective Serotonin Reuptake Inhibitors) block the reuptake of serotonin, increasing its availability in the synaptic cleft."},
+
+// -- Research Methods (Edexcel Paper 3) --
+{id:"edx_rm1",board:"Edexcel",topic:"Research Methods",type:"mcq",marks:1,text:"A Wilcoxon Signed Ranks test is used when:",options:["Data is nominal and independent groups","Data is at least ordinal and a repeated measures design","Data is interval and independent groups","Data is nominal and repeated measures"],correct:1,explanation:"The Wilcoxon test is used for related/repeated measures designs with at least ordinal data, testing for differences between conditions."},
+{id:"edx_rm2",board:"Edexcel",topic:"Research Methods",type:"mcq",marks:1,text:"The chi-squared test is appropriate when data is:",options:["Interval and related","Ordinal and independent","Nominal/categorical","Ratio and related"],correct:2,explanation:"Chi-squared is used with nominal/categorical data (frequency counts) to test for association or difference between groups."},
+{id:"edx_rm3",board:"Edexcel",topic:"Research Methods",type:"mcq",marks:1,text:"Stratified sampling involves:",options:["Selecting every nth person from a list","Dividing the population into subgroups and sampling proportionally from each","Asking participants to recruit others","Selecting whoever is available"],correct:1,explanation:"Stratified sampling divides the target population into relevant subgroups (strata) and takes a proportional sample from each, ensuring the sample is representative."},
+{id:"edx_rm4",board:"Edexcel",topic:"Research Methods",type:"mcq",marks:1,text:"A Type II error is when:",options:["The null hypothesis is wrongly rejected (false positive)","The alternative hypothesis is wrongly rejected (false negative)","The significance level is too high","The sample is too large"],correct:1,explanation:"A Type II error (false negative) occurs when the null hypothesis is not rejected when it should be - a real effect is missed."},
+{id:"edx_rm5",board:"Edexcel",topic:"Research Methods",type:"mcq",marks:1,text:"If p ≤ 0.05, this means:",options:["There is a 5% probability the results are significant","There is a 5% or less probability the results are due to chance","The results are definitely not due to chance","There is a 95% chance the null hypothesis is true"],correct:1,explanation:"p ≤ 0.05 means there is a 5% or less probability that the results occurred by chance, which is the conventional threshold for statistical significance."},
+
+// -- Issues & Debates (Edexcel) --
+{id:"edx_id1",board:"Edexcel",topic:"Issues & Debates",type:"mcq",marks:1,text:"Sieber and Stanley (1988) identified that socially sensitive research involves:",options:["Research that is too expensive to conduct","Research with implications for the participants or groups they represent","Research that uses deception","Research conducted without ethical approval"],correct:1,explanation:"Sieber and Stanley defined socially sensitive research as studies where there are potential social consequences for the participants or the class of individuals they represent."},
+{id:"edx_id2",board:"Edexcel",topic:"Issues & Debates",type:"mcq",marks:1,text:"Ethnocentrism in psychology refers to:",options:["Studying people from different cultures","Judging other cultures by the standards of one's own culture","Cultural relativism","Anti-social behaviour across cultures"],correct:1,explanation:"Ethnocentrism involves using one's own cultural standards to judge the behaviour, customs, and beliefs of people from other cultures."},
+{id:"edx_id3",board:"Edexcel",topic:"Issues & Debates",type:"mcq",marks:1,text:"The BPS Code of Ethics (2009) includes which four principles?",options:["Respect, Competence, Integrity, Responsibility","Honesty, Accuracy, Reliability, Validity","Beneficence, Non-maleficence, Justice, Autonomy","Consent, Debrief, Protection, Withdrawal"],correct:0,explanation:"The BPS Code of Ethics outlines four ethical principles: Respect, Competence, Integrity, and Responsibility."},
+
+// ========== EDEXCEL MULTI-SELECT (2-4 marks) ==========
+{id:"edx_ms1",board:"Edexcel",topic:"Social Psychology",type:"multiselect",marks:2,
+  text:"Select TWO predictions that social identity theory makes about intergroup behaviour.",
+  options:["In-group members always show physical aggression to out-groups","People categorise themselves into social groups and derive self-esteem from group membership","Minimal group membership is enough to trigger in-group favouritism","Groups only form when there is competition for resources","Out-group members are always deindividuated"],
+  correctIndices:[1,2],
+  explanation:"SIT predicts that social categorisation leads to in-group identification and self-esteem, and that even minimal/arbitrary group membership triggers in-group favouritism and out-group discrimination."},
+{id:"edx_ms2",board:"Edexcel",topic:"Clinical Psychology",type:"multiselect",marks:2,
+  text:"Select TWO features of the DSM-5 classification system.",
+  options:["It covers all physical and mental health conditions","Section II contains diagnostic criteria for mental disorders","It is published by the World Health Organisation","Section III includes cultural formulation interview guidelines","It is freely available online"],
+  correctIndices:[1,3],
+  explanation:"DSM-5 Section II contains the main diagnostic categories and criteria. Section III includes cultural formulation interview guides to help consider cultural factors in diagnosis."},
+{id:"edx_ms3",board:"Edexcel",topic:"Biological Psychology",type:"multiselect",marks:3,
+  text:"Select THREE biological explanations for aggression.",
+  options:["Low serotonin levels","High self-esteem","High testosterone","Reduced prefrontal cortex activity","Social learning from aggressive models","Superordinate goals"],
+  correctIndices:[0,2,3],
+  explanation:"Biological explanations include: low serotonin (reduced impulse control), high testosterone (hormonal influence), and reduced prefrontal cortex activity (poor inhibition of aggressive impulses)."},
+{id:"edx_ms4",board:"Edexcel",topic:"Learning Theories",type:"multiselect",marks:4,
+  text:"Select FOUR of Bandura's key concepts in social learning theory.",
+  options:["Vicarious reinforcement","Classical conditioning","Mediational processes (attention, retention, reproduction, motivation)","Identification with the model","Self-efficacy","Spontaneous recovery","Negative reinforcement"],
+  correctIndices:[0,2,3,4],
+  explanation:"Bandura's SLT includes: vicarious reinforcement (learning from others' rewards), mediational processes, identification with models, and self-efficacy (belief in one's ability)."},
+{id:"edx_ms5",board:"Edexcel",topic:"Cognitive Psychology",type:"multiselect",marks:2,
+  text:"Select TWO features of episodic memory according to Tulving.",
+  options:["It stores facts and general knowledge","It is time-stamped and context-dependent","It includes autobiographical events with emotional content","It stores motor skills and habits","It cannot be consciously recalled"],
+  correctIndices:[1,2],
+  explanation:"Episodic memory stores autobiographical events that are time-stamped, context-dependent, and include emotional content (e.g. your first day at school)."},
+{id:"edx_ms6",board:"Edexcel",topic:"Clinical Psychology",type:"multiselect",marks:2,
+  text:"Identify TWO limitations of using the DSM for diagnosis.",
+  options:["It has strong inter-rater reliability","Patient factors like cultural stigma may reduce diagnostic validity","Comorbidity makes clear diagnosis difficult","It includes a cultural formulation interview","Categories are too broad to be useful"],
+  correctIndices:[1,2],
+  explanation:"DSM limitations include patient factors (e.g. cultural stigma causing patients to withhold information) reducing diagnostic validity, and comorbidity (patients meeting criteria for multiple disorders) making clear diagnosis difficult."},
+{id:"edx_ms7",board:"Edexcel",topic:"Research Methods",type:"multiselect",marks:2,
+  text:"Select TWO reasons for choosing a Spearman's rank correlation test.",
+  options:["Data is nominal","Data is at least ordinal level","Testing for a correlation/association between two variables","Independent groups design","Testing for a difference between two conditions"],
+  correctIndices:[1,2],
+  explanation:"Spearman's rho is used when testing for a correlation between two co-variables with at least ordinal level data."},
+
+// ========== EDEXCEL 8-MARK ESSAY BUILDER ==========
+{id:"edx_e8_1",board:"Edexcel",topic:"Social Psychology",type:"puzzle8",marks:8,
+  text:"Evaluate agency theory as an explanation for obedience.",
+  pieces:[
+    {ao:"AO1",text:"Agency theory (Milgram): people operate in two states - autonomous (free will, personal conscience) and agentic (acting as agent of authority, moral responsibility shifted)."},
+    {ao:"AO1",text:"The shift to the agentic state occurs when a person perceives a legitimate authority figure. Binding factors (fear of disruption, politeness) keep the person obedient despite moral strain."},
+    {ao:"AO3",text:"Support: Milgram's study showed 65% obeyed to 450V. Many showed signs of moral strain (sweating, trembling) yet continued, consistent with the agentic state."},
+    {ao:"AO3",text:"Burger (2009) replicated Milgram ethically (stopping at 150V) and found 70% willing to continue, supporting that obedience through agency is a robust finding across time."},
+    {ao:"AO3",text:"Limitation: Agency theory cannot explain why 35% of Milgram's participants disobeyed. Individual differences (e.g. locus of control) are not accounted for."},
+    {ao:"AO3",text:"Alternative: Social identity theory suggests obedience occurs through identification with the authority figure's goals, not a loss of autonomy. People may actively choose to obey."}
+  ]},
+{id:"edx_e8_2",board:"Edexcel",topic:"Clinical Psychology",type:"puzzle8",marks:8,
+  text:"Evaluate the DSM as a classification system for diagnosing mental health disorders.",
+  pieces:[
+    {ao:"AO1",text:"The DSM-5 (APA) classifies mental disorders with specific diagnostic criteria in Section II. Section III includes cultural formulation interviews to consider cultural factors in diagnosis."},
+    {ao:"AO1",text:"DSM provides standardised criteria so clinicians worldwide can diagnose consistently. It lists symptoms, duration thresholds and severity levels for each disorder."},
+    {ao:"AO3",text:"Strength: Kim-Cohen et al. (2005) found DSM has predictive validity - children meeting DSM criteria for conduct disorder at age 5 were more likely to have educational difficulties later."},
+    {ao:"AO3",text:"Weakness: Rosenhan (1973) showed pseudopatients faking hallucinations were diagnosed with schizophrenia, suggesting the DSM may not distinguish real from fabricated symptoms."},
+    {ao:"AO3",text:"Patient factors (cultural stigma, reluctance to disclose symptoms) can reduce diagnostic validity as clinicians rely on patient-reported information."},
+    {ao:"AO3",text:"Comorbidity: patients often meet criteria for multiple disorders simultaneously, making accurate single diagnosis difficult and questioning whether categories are truly distinct."}
+  ]},
+{id:"edx_e8_3",board:"Edexcel",topic:"Learning Theories",type:"puzzle8",marks:8,
+  text:"Evaluate Bandura's social learning theory as an explanation for behaviour.",
+  pieces:[
+    {ao:"AO1",text:"SLT proposes that behaviour is learned through observation and imitation of role models. Learning occurs through vicarious reinforcement and four mediational processes: attention, retention, reproduction, motivation."},
+    {ao:"AO1",text:"Identification with the model increases imitation. Self-efficacy (belief in one's ability to perform a behaviour) determines whether observed behaviour is reproduced."},
+    {ao:"AO3",text:"Support: Bandura's Bobo doll study showed children who observed aggressive models displayed significantly more imitative aggression than control group children."},
+    {ao:"AO3",text:"Practical applications: SLT explains why media violence exposure correlates with aggression, informing policy on TV/video game age ratings."},
+    {ao:"AO3",text:"Limitation: The Bobo doll study has low ecological validity - a Bobo doll is designed to be hit, so the children's behaviour may not reflect real-world aggression."},
+    {ao:"AO3",text:"SLT ignores biological factors: it cannot explain why some children are more aggressive despite identical observational experiences, suggesting innate temperament plays a role."}
+  ]},
+{id:"edx_e8_4",board:"Edexcel",topic:"Biological Psychology",type:"puzzle8",marks:8,
+  text:"Evaluate biological explanations for aggression.",
+  pieces:[
+    {ao:"AO1",text:"The amygdala triggers aggressive responses. The prefrontal cortex regulates and inhibits these impulses. Reduced prefrontal activity is linked to impulsive aggression."},
+    {ao:"AO1",text:"Neurochemical factors: low serotonin reduces impulse control leading to aggression. High testosterone is associated with increased aggressive and dominant behaviour."},
+    {ao:"AO3",text:"Support: Raine et al. (1997) found NGRI murderers had reduced prefrontal cortex activity and abnormal amygdala functioning compared to matched controls using PET scans."},
+    {ao:"AO3",text:"Practical applications: if aggression has biological causes, drug treatments targeting serotonin or testosterone could reduce violent behaviour."},
+    {ao:"AO3",text:"Biologically reductionist: reduces complex human aggression to brain structures and chemicals, ignoring social, cognitive and environmental factors."},
+    {ao:"AO3",text:"Correlational evidence: brain differences in violent offenders don't prove causation - the violence or imprisonment could have caused the brain changes."}
+  ]},
+
+// ========== EDEXCEL 16-MARK PUZZLES ==========
+{id:"edx_p16_1",board:"Edexcel",topic:"Social Psychology",type:"puzzle16",marks:16,
+  text:"Discuss the contribution of social psychology to society, including at least one application.",
+  pieces:[
+    {ao:"AO1",text:"Social psychology explains how individual behaviour is influenced by others. Key theories include obedience (Milgram's agency theory), conformity, and intergroup relations."},
+    {ao:"AO1",text:"Social identity theory (Tajfel): people categorise into in-groups/out-groups, leading to in-group favouritism and out-group discrimination. Even minimal groups show this bias."},
+    {ao:"AO1",text:"Realistic conflict theory (Sherif): inter-group hostility arises from competition over limited resources. Superordinate goals reduce conflict by requiring cooperation."},
+    {ao:"AO1",text:"Applications include prejudice reduction programmes, understanding workplace obedience, and preventing atrocities like genocide through education about psychological processes."},
+    {ao:"AO3",text:"Strength: Sherif's Robbers Cave demonstrated that superordinate goals reduced inter-group conflict, providing a practical method for reducing real-world prejudice."},
+    {ao:"AO3",text:"Milgram's research informed understanding of obedience in harmful contexts (e.g. Holocaust, Abu Ghraib), helping develop training to resist unethical orders."},
+    {ao:"AO3",text:"Limitation: Much social psychology research uses artificial lab tasks (e.g. Tajfel's minimal groups) which lack ecological validity for understanding real-world intergroup conflict."},
+    {ao:"AO3",text:"Cultural bias: most social psychology research uses Western samples. Findings about obedience and conformity may not generalise to collectivist cultures."},
+    {ao:"AO3",text:"Ethical concerns: Milgram's study caused significant psychological distress. The contribution of social psychology must be weighed against the ethical cost of the research."},
+    {ao:"AO3",text:"Reductionist: social explanations focus on group processes but ignore biological factors (e.g. testosterone in aggression) and individual differences in personality."}
+  ]},
+{id:"edx_p16_2",board:"Edexcel",topic:"Clinical Psychology",type:"puzzle16",marks:16,
+  text:"Discuss the effectiveness of one biological treatment and one psychological treatment for a mental health disorder.",
+  pieces:[
+    {ao:"AO1",text:"SSRIs (biological treatment for depression): block reuptake of serotonin at the synapse, increasing serotonin availability. Takes 2-4 weeks to show effects."},
+    {ao:"AO1",text:"CBT (psychological treatment for depression): identifies and challenges negative automatic thoughts and cognitive distortions. Uses behavioural activation and thought records."},
+    {ao:"AO1",text:"SSRIs are the first-line pharmacological treatment prescribed by GPs. Common brands include fluoxetine (Prozac) and sertraline. Side effects include nausea, insomnia, and sexual dysfunction."},
+    {ao:"AO1",text:"CBT typically involves 12-20 weekly sessions. The therapist helps the patient identify negative thought patterns, test them against evidence, and develop healthier cognitions."},
+    {ao:"AO3",text:"SSRIs: Kirsch et al. (2008) meta-analysis found SSRIs were only marginally better than placebo for mild-moderate depression, questioning their effectiveness."},
+    {ao:"AO3",text:"CBT: NICE guidelines recommend CBT as the primary psychological treatment for depression, supported by extensive evidence from randomised controlled trials."},
+    {ao:"AO3",text:"SSRIs address symptoms (serotonin levels) not causes, so relapse rates are high when medication is stopped. CBT teaches lasting coping skills that persist after treatment."},
+    {ao:"AO3",text:"However, CBT requires patient motivation and cognitive ability to engage. Severely depressed patients may benefit from SSRIs first to enable engagement with CBT."},
+    {ao:"AO3",text:"Combined treatment (SSRIs + CBT) may be most effective, addressing both biological and psychological factors - consistent with a biopsychosocial approach."},
+    {ao:"AO3",text:"Individual differences: SSRIs work for some patients but not others due to genetic variation in serotonin metabolism, highlighting the need for personalised treatment."}
+  ]},
+{id:"edx_p16_3",board:"Edexcel",topic:"Learning Theories",type:"puzzle16",marks:16,
+  text:"Discuss the contribution of learning theories to our understanding of behaviour, including classical conditioning, operant conditioning, and social learning theory.",
+  pieces:[
+    {ao:"AO1",text:"Classical conditioning (Pavlov): learning through association. A neutral stimulus paired repeatedly with an unconditioned stimulus becomes a conditioned stimulus producing a conditioned response."},
+    {ao:"AO1",text:"Operant conditioning (Skinner): behaviour shaped by consequences. Positive/negative reinforcement increases behaviour; positive/negative punishment decreases it."},
+    {ao:"AO1",text:"Social learning theory (Bandura): behaviour learned through observation, imitation, and vicarious reinforcement. Requires attention, retention, reproduction, and motivation."},
+    {ao:"AO1",text:"Watson and Rayner (1920): conditioned Little Albert to fear a white rat through classical conditioning, demonstrating how phobias can be learned."},
+    {ao:"AO3",text:"Practical applications: classical conditioning underlies systematic desensitisation for phobias, and aversion therapy. Operant conditioning informs token economy programmes."},
+    {ao:"AO3",text:"SLT bridges behaviourism and cognitive psychology by including cognitive mediational processes, making it more complete than pure stimulus-response theories."},
+    {ao:"AO3",text:"Limitation: behaviourist learning theories are environmentally deterministic - they ignore biological factors like genetic predisposition and innate temperament."},
+    {ao:"AO3",text:"Animal research (Pavlov's dogs, Skinner's rats) may not generalise to human learning, which involves language, complex cognition, and cultural influences."},
+    {ao:"AO3",text:"Strength: learning theories are scientific and testable, based on controlled laboratory experiments with replicable procedures and objective measurements."},
+    {ao:"AO3",text:"Ethical concerns: Watson's Little Albert study caused lasting fear in an infant without consent or treatment, which would violate modern ethical guidelines."}
   ]}
 ];
 
@@ -711,7 +937,7 @@ const QUESTIONS = [
 // GAME STATE
 // ============================================
 let state = {
-  mode: 10, topics: [], questions: [], currentIndex: 0,
+  board: 'AQA', mode: 10, topics: [], questions: [], currentIndex: 0,
   score: 0, maxScore: 0, streak: 0, bestStreak: 0,
   startTime: 0, answered: false, puzzleState: null, multiState: null,
   essayMode: false, essayTimerMinutes: 20, essayTimerEnd: 0,
@@ -719,17 +945,40 @@ let state = {
 };
 
 // ============================================
+// BOARD SELECTION
+// ============================================
+const BOARD_THEMES = {
+  AQA: { accent: '#5b21b6', accentHover: '#4c1d95', label: 'AQA Psychology' },
+  Edexcel: { accent: '#065f46', accentHover: '#064e3b', label: 'Edexcel Psychology' }
+};
+
+function selectBoard(board) {
+  state.board = board;
+  const theme = BOARD_THEMES[board];
+  document.documentElement.style.setProperty('--accent', theme.accent);
+  document.documentElement.style.setProperty('--accent-hover', theme.accentHover);
+  document.getElementById('boardTitle').textContent = theme.label;
+  document.getElementById('homeBoardLabel').textContent = board + ' Exam Board';
+  showScreen('home');
+}
+
+// ============================================
 // TOPIC MANAGEMENT
 // ============================================
+function getBoardQuestions() {
+  return QUESTIONS.filter(q => q.board === state.board);
+}
+
 function getTopics() {
   const topics = new Set();
-  QUESTIONS.forEach(q => topics.add(q.topic));
+  getBoardQuestions().forEach(q => topics.add(q.topic));
   return [...topics].sort();
 }
 
 function renderTopics() {
   const grid = document.getElementById('topicGrid');
-  const pool = state.essayMode ? QUESTIONS.filter(q => q.type === 'puzzle16') : QUESTIONS;
+  const boardQs = getBoardQuestions();
+  const pool = state.essayMode ? boardQs.filter(q => q.type === 'puzzle16') : boardQs;
   const topics = [...new Set(pool.map(q => q.topic))].sort();
   const counts = {};
   pool.forEach(q => { counts[q.topic] = (counts[q.topic] || 0) + 1; });
@@ -771,6 +1020,11 @@ function showScreen(id) {
   document.getElementById(id).classList.add('active');
   if (id === 'leaderboard') renderLeaderboard();
   if (id === 'topic-select') renderTopics();
+  if (id === 'board-select') {
+    // Reset accent to default
+    document.documentElement.style.setProperty('--accent', '#2563eb');
+    document.documentElement.style.setProperty('--accent-hover', '#1d4ed8');
+  }
   if (id !== 'essay-quiz' && state.essayTimerId) { clearInterval(state.essayTimerId); state.essayTimerId = null; }
 }
 
@@ -782,7 +1036,7 @@ function selectMode(n) { state.mode = n; state.essayMode = false; showScreen('to
 function startGame() {
   if (state.topics.length === 0) { alert('Please select at least one topic.'); return; }
 
-  let pool = QUESTIONS.filter(q => state.topics.includes(q.topic));
+  let pool = getBoardQuestions().filter(q => state.topics.includes(q.topic));
   pool = shuffle([...pool]);
 
   // Mix question types proportionally
@@ -1207,11 +1461,11 @@ function submitName() {
     const maxScore = state.questions.length * 16;
     const pct = Math.round((totalScore / maxScore) * 100);
     const totalTime = state.essayScores.reduce((s, e) => s + e.timeUsed, 0);
-    saveToLeaderboard({ name, score: totalScore, maxScore, pct, mode: 'essay', streak: 0, time: totalTime, date: new Date().toISOString() });
+    saveToLeaderboard({ name, score: totalScore, maxScore, pct, mode: 'essay', streak: 0, time: totalTime, board: state.board, date: new Date().toISOString() });
   } else {
     const elapsed = Date.now() - state.startTime;
     const pct = Math.round((state.score / state.maxScore) * 100);
-    saveToLeaderboard({ name, score: state.score, maxScore: state.maxScore, pct, mode: state.mode, streak: state.bestStreak, time: elapsed, date: new Date().toISOString() });
+    saveToLeaderboard({ name, score: state.score, maxScore: state.maxScore, pct, mode: state.mode, streak: state.bestStreak, time: elapsed, board: state.board, date: new Date().toISOString() });
   }
 }
 
@@ -1249,29 +1503,42 @@ function saveToLeaderboard(entry) {
 }
 
 let currentLBFilter = 'all';
+let currentLBBoard = 'all';
+
+function filterLBBoard(board, btn) {
+  currentLBBoard = board;
+  document.querySelectorAll('#lbBoardTabs .lb-tab').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderLeaderboard();
+}
+
 function filterLeaderboard(mode, btn) {
   currentLBFilter = mode;
-  document.querySelectorAll('.lb-tab').forEach(t => t.classList.remove('active'));
+  const tabs = btn ? btn.parentElement : null;
+  if (tabs) tabs.querySelectorAll('.lb-tab').forEach(t => t.classList.remove('active'));
   if (btn) btn.classList.add('active');
   renderLeaderboard();
 }
 
 function renderLeaderboard() {
   let lb = getLeaderboard();
+  if (currentLBBoard !== 'all') lb = lb.filter(e => e.board === currentLBBoard);
   if (currentLBFilter !== 'all') lb = lb.filter(e => e.mode === currentLBFilter);
   const container = document.getElementById('leaderboardContent');
   if (lb.length === 0) { container.innerHTML = '<div class="lb-empty">No scores yet. Play a quiz to get started!</div>'; return; }
   const modeColors = {10:'#dcfce7',50:'#fef3c7',100:'#fce7f3',essay:'#e0e7ff'};
   const modeLabels = {10:'Easy',50:'Medium',100:'Hero',essay:'Essay'};
+  const boardColors = {AQA:'#ede9fe',Edexcel:'#d1fae5'};
   container.innerHTML = `<table class="lb-table">
-    <thead><tr><th>#</th><th>Name</th><th>Score</th><th>Mode</th><th>Streak</th><th>Time</th></tr></thead>
+    <thead><tr><th>#</th><th>Name</th><th>Score</th><th>Board</th><th>Mode</th><th>Time</th></tr></thead>
     <tbody>${lb.slice(0, 20).map((e, i) => {
       const mins = Math.floor(e.time / 60000);
       const secs = Math.floor((e.time % 60000) / 1000);
       return `<tr><td class="lb-rank">${i+1}</td><td>${escHTML(e.name)}</td>
         <td><strong>${e.pct}%</strong> <span style="color:var(--muted);font-size:0.8rem">(${e.score}/${e.maxScore})</span></td>
+        <td><span class="lb-mode" style="background:${boardColors[e.board] || '#f0f0f0'}">${e.board || 'AQA'}</span></td>
         <td><span class="lb-mode" style="background:${modeColors[e.mode] || '#f0f0f0'}">${modeLabels[e.mode] || e.mode}</span></td>
-        <td>${e.mode === 'essay' ? '-' : e.streak}</td><td>${mins}:${secs.toString().padStart(2, '0')}</td></tr>`;
+        <td>${mins}:${secs.toString().padStart(2, '0')}</td></tr>`;
     }).join('')}</tbody></table>`;
 }
 
@@ -1292,7 +1559,7 @@ function selectEssayTimer(mins) {
 
 function startEssayGame() {
   if (state.topics.length === 0) { alert('Please select at least one topic.'); return; }
-  let pool = QUESTIONS.filter(q => q.type === 'puzzle16' && state.topics.includes(q.topic));
+  let pool = getBoardQuestions().filter(q => q.type === 'puzzle16' && state.topics.includes(q.topic));
   pool = shuffle([...pool]);
   state.questions = pool;
   state.currentIndex = 0;
